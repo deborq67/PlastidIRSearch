@@ -119,5 +119,5 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-GENBANK_DIR=os.path.join(BASE_DIR, "genbank_interaction", "genbank_files")
+GENBANK_DIR = os.path.join(BASE_DIR, "genbank_interaction", "genbank_files")
 STATICFILES_DIRS = [BASE_DIR / "static"]
