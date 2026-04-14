@@ -206,4 +206,5 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-genbank_interaction/genbank_files/
+/plastid_ir_search/genbank_interaction/genbank_files
+
