@@ -1,12 +1,10 @@
-from Bio import Entrez, SeqIO
-from io import StringIO
+from Bio import Entrez
 import pandas as pd
 import time
 
 '''
-Purpose: This script calculates the ambiguity percentage (percent of non A, T, C, or G
-values in a DNA sequence) and sorts by the records by those with the highest (in other
-words the most error prone records are shown first.)
+Purpose: This script only fetches basic information on an organism from Genbank.
+It will work in conjunction with a local Genbank database to parse using said information.
 '''
 
 
