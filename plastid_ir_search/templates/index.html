@@ -1,0 +1,17 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Organelle Search{% endblock %}
+
+{% block search %}
+
+    <div class="input-group">
+        <input class="form-control" type="text" name="search_term" placeholder="Search plant or alga." aria-label="Search">
+        <button class="btn btn-primary px-4" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+
+    <h5>Start your search.</h5>
+
+{% endblock %}
