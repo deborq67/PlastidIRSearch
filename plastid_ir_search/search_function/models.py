@@ -7,8 +7,8 @@ class SearchResult(models.Model):
     accession = models.CharField(max_length=50)
     title = models.TextField()
     bp_length = models.IntegerField()
-    updated = models.DateTimeField(auto_now_add=True)
-    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(null=True, blank=True)
+    created = models.DateTimeField(null=True, blank=True)
 
 class SearchHistory(models.Model):
     class Meta:

@@ -2,7 +2,6 @@ from Bio.Phylo.PhyloXML import Accession
 from django.db import models
 
 
-
 class IR_Identification(models.Model):
     #search_result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, related_name="ir_identifications")
     gb_file = models.FileField(upload_to="gb_files/")
