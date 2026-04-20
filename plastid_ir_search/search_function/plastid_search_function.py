@@ -11,7 +11,7 @@ It will work in conjunction with a local Genbank database to parse using said in
 def initiate_search(search_term):
     # Email is a requirement by NCBI, the API provider.
 
-    Entrez.email = johnsmith@example.com
+    Entrez.email = "johnsmith@example.com"
 
     query = (f'"{search_term}"[Organism]' +
              ' AND ((chloroplast[filter] OR plastid[filter]) AND "complete genome"[Title])'
@@ -44,11 +44,10 @@ def initiate_search(search_term):
             "Entry": index,
             "Accession": summary['AccessionVersion'],
             "Title": summary['Title'],
-            "BP Length": int(summary['Length']),
+            "BP_Length": int(summary['Length']),
             "Updated": summary['UpdateDate'],
             "Created": summary['CreateDate'],
         })
-
     df = pd.DataFrame(records)
 
     return df, total_records

@@ -30,7 +30,7 @@ def search(request):
             result = SearchResult.objects.create(
                 accession=record['Accession'],
                 title=record['Title'],
-                bp_length=record['BP Length'],
+                bp_length=record['BP_Length'],
                 updated=datetime.strptime(record['Updated'], '%Y/%m/%d') if record['Updated'] else None,
                 created=datetime.strptime(record['Created'], '%Y/%m/%d') if record['Created'] else None,
             )
@@ -38,6 +38,11 @@ def search(request):
 
         #Save history.
         history_record.results.set(result_instances)
+
+        #Clear the SearchResult model to keep it from being too bloated. It's only meant to
+        #link to SearchHistory anyway, which is persistent.
+
+        # SearchResult.objects.all().delete()
 
         return render(request, 'search_function/results.html', {
             'search_term': search_term,
@@ -48,4 +53,7 @@ def search(request):
     return render(request, 'index.html')
 
 def history(request):
-    return render(request, 'search_function/history.html')
+    history_records = SearchHistory.objects.filter(
+        session_key=request.session.session_key
+    ).values('search_term', 'total_records', 'searched_at').order_by('-searched_at')
+    return render(request, 'search_function/history.html', {"history_records": history_records})
