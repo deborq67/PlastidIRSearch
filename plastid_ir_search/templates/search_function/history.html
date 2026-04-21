@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <div class="content">
+    <div class="container">
+      <h2 class="mb-2">Results for {{ search_term }}</h2>
+      <p>{{ total_records }} records found.</p>
+
+      {% if history_records %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+                <th scope="col">Search Term</th>
+              <th scope="col">Records Found</th>
+              <th scope="col">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in history_records %}
+            <tr>
+              <td>{{ record.search_term  }}</td>
+              <td>{{ record.total_records  }}</td>
+              <td>{{ record.searched_at  }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p>No history found.</p>
+      {% endif %}
+
+    </div>
+  </div>
+
+{% endblock %}
