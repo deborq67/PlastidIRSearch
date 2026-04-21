@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .forms import SearchForm
 from .plastid_search_function import initiate_search
 from .models import SearchResult, SearchHistory
 from datetime import datetime

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% comment %}
+    If there is an associated file with search, show this:
+    {% endcomment %}
+
+ <div class="content">
+    <div class="container">
+      <h2 class="mb-2">Results for {{ search_term }}</h2>
+      <p>{{ total_records }} records found.</p>
+      {% if ir_result %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="row">Accession</th>
+                        <th scope="row">IRa Reported?</th>
+                        <th scope="row">IRa Start</th>
+                        <th scope="row">IRa End</th>
+                        <th scope="row">IRa Length</th>
+                        <th scope="row">IRb Reported?</th>
+                        <th scope="row">IRb Start</th>
+                        <th scope="row">IRb End</th>
+                        <th scope="row">IRb Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ ir_result.accession }}</td>
+                        <td>{{ ir_result.ira_reported }}</td>
+                        <td>{{ ir_result.ira_reported_start }}</td>
+                        <td>{{ ir_result.ira_reported_end }}</td>
+                        <td>{{ ir_result.ira_reported_length }}</td>
+                        <td>{{ ir_result.irb_reported }}</td>
+                        <td>{{ ir_result.irb_reported_start }}</td>
+                        <td>{{ ir_result.irb_reported_end }}</td>
+                        <td>{{ ir_result.irb_reported_length }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p>No IR file found for {{ search_term }}.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

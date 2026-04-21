@@ -1,3 +1,4 @@
 from django.contrib import admin
+from .models import IR_Identification
 
-# Register your models here.
+admin.site.register(IR_Identification)

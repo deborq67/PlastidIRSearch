@@ -71,7 +71,7 @@
                <div class="container-fluid justify-content-end">
                   <ul class="navbar-nav">
                       <li class="nav-item">
-               <a class="nav-link" href="{% url 'search_history' %}"><i class="fa fa-history"></i> History</a>
+               <a class="nav-link" href="{% url 'history' %}"><i class="fa fa-history"></i> History</a>
                     </li>
                   </ul>
                </div>
@@ -80,7 +80,7 @@
             <p> This represents the top box that by default has the logo.</p>
             {% endcomment %}
             <div class="rounded-3 text-center" style="background: linear-gradient(#E3F70C, #318A11);">
-               <a>
+               <a href={% url "index" %}>
                <img class="img-fluid mx-auto d-block" src="{% static 'PlastidIRSearch.png' %}" style="padding: 10px;">
                </a>
                {% block header %}
