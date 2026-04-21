@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .plastid_search_function import initiate_search
 from .models import SearchResult, SearchHistory
+from genbank_interaction.models import IR_Identification
 from datetime import datetime
 
 def index(request):
@@ -34,6 +35,10 @@ def search(request):
                 created=datetime.strptime(record['Created'], '%Y/%m/%d') if record['Created'] else None,
             )
             result_instances.append(result)
+            ir_result = IR_Identification.objects.filter(accession=record['Accession']).first()
+            if ir_result:
+                record['ira_reported'] = ir_result.ira_reported
+                record['irb_reported'] = ir_result.irb_reported
 
         #Save history.
         history_record.results.set(result_instances)
@@ -46,7 +51,7 @@ def search(request):
         return render(request, 'search_function/results.html', {
             'search_term': search_term,
             'results': search_dict,
-            'total_records': total_records
+            'total_records': total_records,
         })
 
     return render(request, 'index.html')

@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 
+{% block header %}
+<br>
+<h2 class="mb-2">Results for {{ search_term }}</h2>
+      <p>{{ total_records }} records found.</p>
+<br>
+{% endblock %}
+
 {% block content %}
 
   <div class="content">
     <div class="container">
-      <h2 class="mb-2">Results for {{ search_term }}</h2>
-      <p>{{ total_records }} records found.</p>
 
       {% if results %}
       <div class="table-responsive">
@@ -17,6 +22,7 @@
               <th scope="col">Base Pair Length</th>
               <th scope="col">Updated</th>
               <th scope="col">Created</th>
+                <th scope="col">IR Reported?</th>
             </tr>
           </thead>
           <tbody>
@@ -27,6 +33,21 @@
               <td>{{ result.BP_Length }}</td>
               <td>{{ result.Updated }}</td>
               <td>{{ result.Created }}</td>
+
+                {% if result.ira_reported == "yes" or result.irb_reported == "yes" %}
+                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
+
+                {% elif result.ira_reported == "no" or result.irb_reported == "no" %}
+                    <td><i class="bi bi-x-circle-fill text-danger"></i></td>
+
+                    {% comment %}
+                    Got to add an elif for ambiguous cases. Will do later.
+                    {% endcomment %}
+
+                {% else %}
+                    <td><i class="bi bi-dash-circle-fill text-secondary"></i></td>
+
+                {% endif %}
             </tr>
             {% endfor %}
           </tbody>
