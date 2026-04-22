@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <br>
+    <h3>Your download will begin shortly.</h3>
+    <p>Click on the logo to go to the home page.</p>
+
+    <script>
+    window.location.href = "{{ download }}";
+</script>
+
+{% endblock %}

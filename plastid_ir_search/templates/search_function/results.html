@@ -2,9 +2,29 @@
 
 {% block header %}
 <br>
-<h2 class="mb-2">Results for {{ search_term }}</h2>
-      <p>{{ total_records }} records found.</p>
+<h3 class="mb-2">Results for {{ search_term }}</h3>
+    <h3>{{ total_records }} records found.</h3>
 <br>
+
+    <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#DownloadResultsModal">Download Results</a>
+
+<div class="modal fade" id="DownloadResultsModal" tabindex="-1" aria-labelledby="ResultsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="ResultsModalLabel">Confirmation</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to download Results?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="{% url 'download_results' %}?download=true" class="btn btn-primary">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block content %}
