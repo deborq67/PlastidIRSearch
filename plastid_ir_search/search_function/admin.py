@@ -7,4 +7,5 @@ from .models import SearchResult, SearchHistory
 class SearchHistoryAdmin(ModelAdmin):
     readonly_fields = ["session_key", "search_term", "total_records"]
     filter_horizontal = ["results"]
+    search_fields = ["search_term", "searched_at"]
     pass

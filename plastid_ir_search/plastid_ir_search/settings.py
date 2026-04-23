@@ -32,6 +32,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",  # before django.contrib.admin
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "unfold.contrib.import_export",  # optional, if django-import-export package is used
+    "unfold.contrib.guardian",  # optional, if django-guardian package is used
+    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
+    "unfold.contrib.location_field",  # optional, if django-location-field package is used
+    "unfold.contrib.constance",  # optional, if django-constance package is used
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -101,6 +110,38 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+UNFOLD = {
+    "SITE_HEADER": "Plastid IR Admin",
+    "SITE_TITLE": "Plastid IR Admin",
+    "COLORS": {
+        "primary": {
+            "50":  "236 250 234",
+            "100": "218 245 214",
+            "200": "181 236 172",
+            "300": "144 226 131",
+            "400": "118 219 102",
+            "500": "97 214 79",
+            "600": "67 198 47",
+            "700": "53 157 37",
+            "800": "39 116 27",
+            "900": "28 83 19",
+            "950": "18 54 13",
+        },
+        "base": {
+            "50":  "236 242 236",   # lightest - input backgrounds
+            "100": "214 228 214",
+            "200": "173 201 173",
+            "300": "132 174 132",
+            "400": "94 140 94",
+            "500": "64 106 64",
+            "600": "45 77 45",
+            "700": "33 56 33",
+            "800": "23 40 23",
+            "900": "15 27 15",
+            "950": "8 15 8",        # darkest - main backgrounds
+        },
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

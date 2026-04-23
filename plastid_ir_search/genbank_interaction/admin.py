@@ -13,4 +13,5 @@ class IRCalculationAdmin(ModelAdmin):
         "irb_reported_end": "ira_reported == 'yes'",
         "irb_reported_length": "ira_reported == 'yes'",
     }
+    search_fields = ["accession", "title"]
     pass
