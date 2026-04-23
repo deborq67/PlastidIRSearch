@@ -1,5 +1,10 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin, StackedInline
 from .models import SearchResult, SearchHistory
 
-admin.site.register(SearchResult)
-admin.site.register(SearchHistory)
+
+@admin.register(SearchHistory)
+class SearchHistoryAdmin(ModelAdmin):
+    readonly_fields = ["session_key", "search_term", "total_records"]
+    filter_horizontal = ["results"]
+    pass

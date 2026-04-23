@@ -537,14 +537,15 @@ class IROperations:
     def collect_info_from_features(self, ira_feature, irb_feature):
         fields = {
             "ACCESSION": self.rec.id,
+            "TITLE": self.rec.description,
             "IRa_REPORTED": "yes" if ira_feature else "no",
-            "IRa_REPORTED_START": ira_feature.location.start + 1 if ira_feature else pd.NA,
-            "IRa_REPORTED_END": ira_feature.location.end if ira_feature else pd.NA,
-            "IRa_REPORTED_LENGTH": int(len(ira_feature)) if ira_feature else pd.NA,
+            "IRa_REPORTED_START": ira_feature.location.start + 1 if ira_feature else None,
+            "IRa_REPORTED_END": ira_feature.location.end if ira_feature else None,
+            "IRa_REPORTED_LENGTH": int(len(ira_feature)) if ira_feature else None,
             "IRb_REPORTED": "yes" if irb_feature else "no",
-            "IRb_REPORTED_START": irb_feature.location.start + 1 if irb_feature else pd.NA,
-            "IRb_REPORTED_END": irb_feature.location.end if irb_feature else pd.NA,
-            "IRb_REPORTED_LENGTH": int(len(irb_feature)) if irb_feature else pd.NA,
+            "IRb_REPORTED_START": irb_feature.location.start + 1 if irb_feature else None,
+            "IRb_REPORTED_END": irb_feature.location.end if irb_feature else None,
+            "IRb_REPORTED_LENGTH": int(len(irb_feature)) if irb_feature else None,
         }
         df = pd.DataFrame([fields])
         return df
