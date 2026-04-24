@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% block title %}
+History
+{% endblock %}
 {% block header %}
 
      <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#DownloadHistoryModal">Download History</a>
@@ -28,8 +31,8 @@
 
   <div class="content">
     <div class="container">
-      <h2 class="mb-2">Results for {{ search_term }}</h2>
-      <p>{{ total_records }} records found.</p>
+      <h2 class="mb-2">Your Search History</h2>
+    <br>
 
       {% if history_records %}
       <div class="table-responsive">
@@ -38,7 +41,7 @@
             <tr>
                 <th scope="col">Search Term</th>
               <th scope="col">Records Found</th>
-              <th scope="col">Time</th>
+              <th scope="col">Timestamp</th>
             </tr>
           </thead>
           <tbody>

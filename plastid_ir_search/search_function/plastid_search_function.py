@@ -1,6 +1,7 @@
 from Bio import Entrez
 import pandas as pd
 import time
+from django.core.cache import cache
 
 '''
 Purpose: This script only fetches basic information on an organism from Genbank.
@@ -17,6 +18,12 @@ def initiate_search(search_term):
              ' AND ((chloroplast[filter] OR plastid[filter]) AND "complete genome"[Title])'
              )
 
+    # Cache the result to save on speed.
+
+    cached = cache.get(search_term)
+    if cached:
+        return cached
+
     # Entrez.esearch fetches IDs necessary to get record title and DNA sequence.
 
     handle = Entrez.esearch(db="nuccore", term=query, retmax=10000)
@@ -25,29 +32,30 @@ def initiate_search(search_term):
 
     total_records = int(record['Count'])
 
-    if total_records == 0:
-        return pd.DataFrame(), 0
-
     # Get IDs needed for look up records.
 
     id_list = record["IdList"]
 
     # Get records and place in a dataframe.
 
-    handle = Entrez.esummary(db="nuccore", id=",".join(id_list), retmax=500)
-    summaries = Entrez.read(handle)
-    handle.close()
 
     records = []
-    for index, summary in enumerate(summaries):
-        records.append({
-            "Entry": index,
-            "Accession": summary['AccessionVersion'],
-            "Title": summary['Title'],
-            "BP_Length": int(summary['Length']),
-            "Updated": summary['UpdateDate'],
-            "Created": summary['CreateDate'],
-        })
-    df = pd.DataFrame(records)
+    batch_size = 500
+    for i in range(0, len(id_list), batch_size):
+        batch = id_list[i:i + batch_size]
+        handle = Entrez.esummary(db="nuccore", id=",".join(batch), retmax=batch_size)
+        summaries = Entrez.read(handle)
+        handle.close()
+        time.sleep(0.34)
+        for index, summary in enumerate(summaries):
+            records.append({
+                "Entry": i + index,
+                "Accession": summary['AccessionVersion'],
+                "Title": summary['Title'],
+                "BP_Length": int(summary['Length']),
+                "Updated": summary['UpdateDate'],
+                "Created": summary['CreateDate'],
+            })
 
+    df = pd.DataFrame(records)
     return df, total_records
