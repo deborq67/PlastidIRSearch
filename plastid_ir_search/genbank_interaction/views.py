@@ -5,7 +5,6 @@ from .ir_operations import *
 from .models import IR_Identification
 from search_function.models import SearchResult
 
-
 def ir_info(request, accession):
 
     '''

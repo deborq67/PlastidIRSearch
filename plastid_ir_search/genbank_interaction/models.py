@@ -1,5 +1,4 @@
 from django.db import models
-from search_function.models import SearchResult
 
 
 class IR_Identification(models.Model):

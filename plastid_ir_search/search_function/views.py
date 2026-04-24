@@ -1,17 +1,24 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .plastid_search_function import initiate_search
 from .models import SearchResult, SearchHistory
 from genbank_interaction.models import IR_Identification
 from datetime import datetime
+import pandas as pd
 import csv
 from django.http import HttpResponse
+from django_pandas.io import read_frame
+
+from genbank_interaction.ir_operations import IROperations
+
+from django.core.paginator import (Paginator, EmptyPage, PageNotAnInteger)
+
+
 
 def index(request):
     return render(request, 'index.html')
 
 def search(request):
     if request.method == 'POST':
-
         if SearchResult.objects.exists():
             ''' Clear the SearchResult model at the beginning of each new search to
              keep it from being too bloated. It's only meant to
@@ -36,29 +43,51 @@ def search(request):
 
         result_instances = []
         for record in search_dict:
+            ir_result = IR_Identification.objects.filter(accession=record['Accession']).first()
             result = SearchResult.objects.create(
                 accession=record['Accession'],
                 title=record['Title'],
                 bp_length=record['BP_Length'],
                 updated=datetime.strptime(record['Updated'], '%Y/%m/%d') if record['Updated'] else None,
                 created=datetime.strptime(record['Created'], '%Y/%m/%d') if record['Created'] else None,
+                ir_info=ir_result,
             )
             result_instances.append(result)
-            ir_result = IR_Identification.objects.filter(accession=record['Accession']).first()
             if ir_result:
                 record['ira_reported'] = ir_result.ira_reported
                 record['irb_reported'] = ir_result.irb_reported
+            else:
+                record['ira_reported'] = 'n/a'
+                record['irb_reported'] = 'n/a'
 
         #Save history.
         history_record.results.set(result_instances)
 
-        return render(request, 'search_function/results.html', {
-            'search_term': search_term,
-            'results': search_dict,
-            'total_records': total_records,
-        })
+        request.session['search_dict'] = search_dict
+        request.session['search_term'] = search_term
+        request.session['total_records'] = total_records
 
-    return render(request, 'index.html')
+        return redirect('/results/')
+
+    search_dict = request.session.get('search_dict', [])
+    search_term = request.session.get('search_term', '')
+    total_records = request.session.get('total_records', 0)
+
+    default_page = 1
+    page = request.GET.get('page', default_page)
+    paginator = Paginator(search_dict, 20)
+    try:
+        results_page = paginator.page(page)
+    except PageNotAnInteger:
+        results_page = paginator.page(default_page)
+    except EmptyPage:
+        results_page = paginator.page(paginator.num_pages)
+
+    return render(request, 'search_function/results.html', {
+        'search_term': search_term,
+        'results': results_page,
+        'total_records': total_records,
+    })
 
 def history(request):
     history_records = SearchHistory.objects.filter(
@@ -68,36 +97,32 @@ def history(request):
 
 def download_results(request):
     if request.GET.get('download'):
-        model_class = SearchResult
-
-        meta = model_class._meta
-        field_names = ['accession','title','bp_length','updated','created']
-
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_results.csv"'.format(meta)
-        writer = csv.writer(response)
-
-        writer.writerow(field_names)
-        for obj in model_class.objects.all():
-            writer.writerow([getattr(obj, field) for field in field_names])
-
+        #Django-Pandas handles the CSV Exports. A great improvement from the last export code.
+        searchresult_qs = SearchResult.objects.all()
+        df = read_frame(searchresult_qs, fieldnames=['accession', 'title', 'bp_length', 'updated', 'created', 'ira_info__ira_reported'])
+        df['updated'] = pd.to_datetime(df['updated']).dt.strftime('%Y-%m-%d')
+        df['created'] = pd.to_datetime(df['created']).dt.strftime('%Y-%m-%d')
+        df = df.rename(columns={"accession": "Accession",
+                                "title": "Title",
+                                "bp_length": "Base_Pair_Length",
+                                "updated": "Updated",
+                                "created": "Created",
+                                "ira_info__ira_reported": "IRs_Reported"})
+        response = HttpResponse(df.to_csv(index=False), content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_results.csv"'
         return response
     return render(request, "search_function/download.html")
 
 
 def download_history(request):
     if request.GET.get('download'):
-        model_class = SearchHistory
-        meta = model_class._meta
-        field_names = ['search_term','total_records','searched_at']
-
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_history.csv"'.format(meta)
-        writer = csv.writer(response)
-
-        writer.writerow(field_names)
-        for obj in model_class.objects.all():
-            writer.writerow([getattr(obj, field) for field in field_names])
-
+        searchhistory_qs = SearchHistory.objects.all()
+        df = read_frame(searchhistory_qs, fieldnames=['search_term', 'total_records', 'searched_at'])
+        df['searched_at'] = pd.to_datetime(df['searched_at']).dt.strftime('%Y-%m-%d %H:%M:%S')
+        df = df.rename(columns={"search_term": "Search_Term",
+                                "total_records": "Records_Found",
+                                "searched_at": "Timestamp"})
+        response = HttpResponse(df.to_csv(index=False), content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_history.csv"'
         return response
     return render(request, "search_function/download.html")
