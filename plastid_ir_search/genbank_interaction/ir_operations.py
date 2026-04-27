@@ -40,55 +40,6 @@ class IROperations:
             raise Exception("Error reading record: Unable to find '%s'." % (fp_record))
         return rec
 
-    def write_sequence_to_fasta(self, seq, header, fp_outfile):
-        '''
-        Writes a sequence to a new file in FASTA format
-        Params:
-         - seq: the sequence
-         - header: string that will be written as header in the FASTA file
-         - fp_outfile: file path to output file
-        '''
-        if not seq is None:
-            if not header.startswith(">"):
-                header = ">" + header
-            with open(fp_outfile, "w") as fh_outfile:
-                fh_outfile.write(header + "\n")
-                fh_outfile.write(seq + "\n")
-
-    def write_irs_to_fasta(self, rec, IRa, IRb, fp_outdir, rev_comp = False):
-        '''
-        Writes the inverted repeat SeqFeatures' sequences to separate files in FASTA format
-        Params:
-         - rec: the SeqRecord from which the SeqFeature's sequences will be extracted
-         - IRa: SeqFeature that corresponds to inverted repeat A
-         - IRb: SeqFeature that corresponds to inverted repeat B
-         - fp_outdir: file path to output directory
-         - rev_comp: Boolean. Indicates whether the reverse complement of IRb's sequence will be written instead of as provided
-        '''
-        accession = str(rec.id).split('.')[0]
-        if not (IRa is None or IRb is None):
-            IRa_seq = str(IRa.extract(rec).seq)
-            IRa_header = str(accession) + "_IRa"
-            IRb_header = str(accession) + "_IRb_revComp"
-            if rev_comp:
-                IRb_seq = str(IRb.extract(rec).seq.reverse_complement())
-            else:
-                IRb_seq = str(IRb.extract(rec).seq)
-
-            self.write_sequence_to_fasta(IRa_seq, IRa_header, os.path.join(fp_outdir, accession + "_IRa.fasta"))
-            self.write_sequence_to_fasta(IRb_seq, IRb_header, os.path.join(fp_outdir, accession + "_IRb_revComp.fasta"))
-        elif not IRa is None and IRb is None:
-            IRa_seq = str(IRa.extract(rec).seq)
-            IRa_header = str(accession) + "_IRa"
-            self.write_sequence_to_fasta(IRa_seq, IRa_header, os.path.join(fp_outdir, accession + "_IRa.fasta"))
-        elif IRa is None and not IRb is None:
-            IRb_header = str(accession) + "_IRb_revComp"
-            if rev_comp:
-                IRb_seq = str(IRb.extract(rec).seq.reverse_complement())
-            else:
-                IRb_seq = str(IRb.extract(rec).seq)
-            self.write_sequence_to_fasta(IRb_seq, IRb_header, os.path.join(fp_outdir, accession + "_IRb_revComp.fasta"))
-
     ##################################
     # feature identification methods #
     ##################################
@@ -114,37 +65,38 @@ class IROperations:
         if len(feature) < 3:
             identified = False
             possible_junctions = []
+            junction_note = feature.qualifiers.get("note", [""])[0].lower()
 
             jlb_identifiers = {"hard": ["jlb", "lsc-irb", "irb-lsc"], "soft": ["lsc-ir", "ir-lsc"]}
             jsb_identifiers = {"hard": ["jsb", "ssc-irb", "irb-ssc"], "soft": ["ssc-ir", "ir-ssc"]}
             jsa_identifiers = {"hard": ["jsa", "ssc-ira", "ira-ssc"], "soft": ["ssc-ir", "ir-ssc"]}
             jla_identifiers = {"hard": ["jla", "ira-lsc", "lsc-ira"], "soft": ["lsc-ir", "ir-lsc"]}
 
-            if any(identifier in feature.qualifiers["note"][0].lower() for identifier in jlb_identifiers["hard"]):
+            if any(identifier in junction_note for identifier in jlb_identifiers["hard"]):
                 junction_type = 0
                 identified = True
-            elif any(identifier in feature.qualifiers["note"][0].lower() for identifier in jlb_identifiers["soft"]):
+            elif any(identifier in junction_note for identifier in jlb_identifiers["soft"]):
                 possible_junctions.append(0)
 
             if not identified:
-                if any(identifier in feature.qualifiers["note"][0].lower() for identifier in jsb_identifiers["hard"]):
+                if any(identifier in junction_note for identifier in jsb_identifiers["hard"]):
                     junction_type = 1
                     identified = True
-                elif any(identifier in feature.qualifiers["note"][0].lower() for identifier in jsb_identifiers["soft"]):
+                elif any(identifier in junction_note for identifier in jsb_identifiers["soft"]):
                     possible_junctions.append(1)
 
             if not identified:
-                if any(identifier in feature.qualifiers["note"][0].lower() for identifier in jsa_identifiers["hard"]):
+                if any(identifier in junction_note for identifier in jsa_identifiers["hard"]):
                     junction_type = 2
                     identified = True
-                elif any(identifier in feature.qualifiers["note"][0].lower() for identifier in jsa_identifiers["soft"]):
+                elif any(identifier in junction_note for identifier in jsa_identifiers["soft"]):
                     possible_junctions.append(2)
 
             if not identified:
-                if any(identifier in feature.qualifiers["note"][0].lower() for identifier in jla_identifiers["hard"]):
+                if any(identifier in junction_note for identifier in jla_identifiers["hard"]):
                     junction_type = 3
                     identified = True
-                elif any(identifier in feature.qualifiers["note"][0].lower() for identifier in jla_identifiers["soft"]):
+                elif any(identifier in junction_note for identifier in jla_identifiers["soft"]):
                     possible_junctions.append(3)
 
             if not identified:

@@ -93,7 +93,17 @@ def history(request):
     history_records = SearchHistory.objects.filter(
         session_key=request.session.session_key
     ).values('search_term', 'total_records', 'searched_at').order_by('-searched_at')
-    return render(request, 'search_function/history.html', {"history_records": history_records})
+
+    default_page = 1
+    page = request.GET.get('page', default_page)
+    paginator = Paginator(history_records, 20)
+    try:
+        results_page = paginator.page(page)
+    except PageNotAnInteger:
+        results_page = paginator.page(default_page)
+    except EmptyPage:
+        results_page = paginator.page(paginator.num_pages)
+    return render(request, 'search_function/history.html', {"history_records": results_page})
 
 def download_results(request):
     if request.GET.get('download'):
