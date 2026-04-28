@@ -1,6 +1,6 @@
 import os, logging
 
-import pandas as pd
+import polars as pl
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
@@ -487,9 +487,17 @@ class IROperations:
         return feature
 
     def collect_info_from_features(self, ira_feature, irb_feature):
+        #Both fields are "yes" or "no" most of the time. Other cases are exceptions.
+        if ira_feature and irb_feature:
+            ir_reported = "yes"
+        elif not ira_feature and not irb_feature:
+            ir_reported = "no"
+        else:
+            ir_reported = "exception"
         fields = {
             "ACCESSION": self.rec.id,
             "TITLE": self.rec.description,
+            "IR_REPORTED": ir_reported,
             "IRa_REPORTED": "yes" if ira_feature else "no",
             "IRa_REPORTED_START": ira_feature.location.start + 1 if ira_feature else None,
             "IRa_REPORTED_END": ira_feature.location.end if ira_feature else None,
@@ -499,5 +507,13 @@ class IROperations:
             "IRb_REPORTED_END": irb_feature.location.end if irb_feature else None,
             "IRb_REPORTED_LENGTH": int(len(irb_feature)) if irb_feature else None,
         }
-        df = pd.DataFrame([fields])
+        #Forces columns to be integers to avoid any conflicts for null values.
+        df = pl.DataFrame([fields]).cast({
+            "IRa_REPORTED_START": pl.Int64,
+            "IRa_REPORTED_END": pl.Int64,
+            "IRa_REPORTED_LENGTH": pl.Int64,
+            "IRb_REPORTED_START": pl.Int64,
+            "IRb_REPORTED_END": pl.Int64,
+            "IRb_REPORTED_LENGTH": pl.Int64,
+        })
         return df

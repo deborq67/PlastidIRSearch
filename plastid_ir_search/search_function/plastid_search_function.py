@@ -1,5 +1,5 @@
 from Bio import Entrez
-import pandas as pd
+import polars as pl
 import time
 from django.core.cache import cache
 
@@ -36,8 +36,11 @@ def initiate_search(search_term):
 
     id_list = record["IdList"]
 
-    # Get records and place in a dataframe.
 
+    '''
+    These lines get records in batches of 500 and have a delay to keep the API from
+    closing its connection; which has already happened to me a few times.
+    '''
 
     records = []
     batch_size = 500
@@ -47,9 +50,11 @@ def initiate_search(search_term):
         summaries = Entrez.read(handle)
         handle.close()
         time.sleep(0.34)
-        for index, summary in enumerate(summaries):
+
+        # Get records and place in a dataframe.
+
+        for summary in summaries:
             records.append({
-                "Entry": i + index,
                 "Accession": summary['AccessionVersion'],
                 "Title": summary['Title'],
                 "BP_Length": int(summary['Length']),
@@ -57,5 +62,10 @@ def initiate_search(search_term):
                 "Created": summary['CreateDate'],
             })
 
-    df = pd.DataFrame(records)
+    df = pl.DataFrame(records)
+
+    #Cache records if already searched.
+
+    cache.set(search_term, (df, total_records))
+
     return df, total_records

@@ -15,6 +15,7 @@ class IR_Identification(models.Model):
 
     accession = models.CharField(max_length=50, unique=True)
     title = models.TextField(default="No Title")
+    ir_reported = models.CharField(max_length=50, default="no")
     ira_reported = models.CharField(max_length=50, choices=IRA_CHOICES, verbose_name="Inverted Repeat A Reported?")
     ira_reported_start = models.IntegerField(null=True, blank=True,
                                              verbose_name="Start of Inverted Repeat A (bp position)")

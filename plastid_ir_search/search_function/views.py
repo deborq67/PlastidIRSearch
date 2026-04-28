@@ -4,7 +4,7 @@ from .models import SearchResult, SearchHistory
 from genbank_interaction.models import IR_Identification
 from datetime import datetime
 import pandas as pd
-import csv
+import polars as pl
 from django.http import HttpResponse
 from django_pandas.io import read_frame
 
@@ -13,9 +13,9 @@ from genbank_interaction.ir_operations import IROperations
 from django.core.paginator import (Paginator, EmptyPage, PageNotAnInteger)
 
 
-
 def index(request):
     return render(request, 'index.html')
+
 
 def search(request):
     if request.method == 'POST':
@@ -28,7 +28,7 @@ def search(request):
         # Take out white space if user makes a search. Convert to dictionary for model conversion.
         search_term = request.POST.get('search_term', '').strip()
         search_query, total_records = initiate_search(search_term)
-        search_dict = search_query.to_dict('records')
+        search_dict = search_query.to_dicts()
 
         #Generate a session if not one yet made.
 
@@ -89,6 +89,7 @@ def search(request):
         'total_records': total_records,
     })
 
+
 def history(request):
     history_records = SearchHistory.objects.filter(
         session_key=request.session.session_key
@@ -105,20 +106,24 @@ def history(request):
         results_page = paginator.page(paginator.num_pages)
     return render(request, 'search_function/history.html', {"history_records": results_page})
 
+
 def download_results(request):
     if request.GET.get('download'):
-        #Django-Pandas handles the CSV Exports. A great improvement from the last export code.
+        '''Django-Pandas is great at turning the df into a Pandas df since there isn't a really good
+        polars equivalent. From there I can convert to Polars and do the following.'''
         searchresult_qs = SearchResult.objects.all()
-        df = read_frame(searchresult_qs, fieldnames=['accession', 'title', 'bp_length', 'updated', 'created', 'ira_info__ira_reported'])
-        df['updated'] = pd.to_datetime(df['updated']).dt.strftime('%Y-%m-%d')
-        df['created'] = pd.to_datetime(df['created']).dt.strftime('%Y-%m-%d')
-        df = df.rename(columns={"accession": "Accession",
-                                "title": "Title",
-                                "bp_length": "Base_Pair_Length",
-                                "updated": "Updated",
-                                "created": "Created",
-                                "ira_info__ira_reported": "IRs_Reported"})
-        response = HttpResponse(df.to_csv(index=False), content_type='text/csv')
+        df = read_frame(searchresult_qs,
+                        fieldnames=['accession', 'title', 'bp_length', 'updated', 'created', 'ira_info__ira_reported'])
+        df = pl.from_pandas(df)
+        df = df.with_columns(pl.col('updated').dt.strftime('%Y-%m-%d'))
+        df = df.with_columns(pl.col('created').dt.strftime('%Y-%m-%d'))
+        df = df.rename({"accession": "Accession",
+                        "title": "Title",
+                        "bp_length": "Base_Pair_Length",
+                        "updated": "Updated",
+                        "created": "Created",
+                        "ir_info__ira_reported": "IRs_Reported"})
+        response = HttpResponse(df.write_csv(), content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_results.csv"'
         return response
     return render(request, "search_function/download.html")

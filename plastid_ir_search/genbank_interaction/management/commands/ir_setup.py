@@ -1,8 +1,10 @@
 import os
-import pandas as pd
+import polars as pl
 from django.core.management.base import BaseCommand
 from multiprocessing import Pool
 from django.conf import settings
+
+#Separate function for parsing needed for multiprocessing to work.
 
 def parse_file(filepath):
     import django
@@ -66,14 +68,15 @@ class Command(BaseCommand):
             self.stdout.write('\n No new files to process.')
             return
 
-        df = pd.concat(processed_results, ignore_index=True)
+        df = pl.concat(processed_results)
 
-        df_dict = df.to_dict(orient='records')
+        df_dict = df.to_dicts()
 
         genbank_records = [
             IR_Identification(
                 accession=row['ACCESSION'],
                 title=row['TITLE'],
+                ir_reported=row['IR_REPORTED'],
                 ira_reported=row['IRa_REPORTED'],
                 ira_reported_start=row['IRa_REPORTED_START'],
                 ira_reported_end=row['IRa_REPORTED_END'],
@@ -101,7 +104,7 @@ class Command(BaseCommand):
                 update_conflicts=True,
                 unique_fields=['accession'],
                 update_fields=[
-                    'title', 'ira_reported', 'ira_reported_start',
+                    'title', 'ir_reported', 'ira_reported', 'ira_reported_start',
                     'ira_reported_end', 'ira_reported_length',
                     'irb_reported', 'irb_reported_start',
                     'irb_reported_end', 'irb_reported_length'
