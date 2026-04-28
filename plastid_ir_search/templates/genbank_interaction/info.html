@@ -44,8 +44,13 @@
                 </tbody>
             </table>
         </div>
-            {% elif ir_result.ira_reported == "no" or ir_result.irb_reported == "no" %}
+
+            {% elif ir_result.ir_reported = "no" %}
             <p>No IRs have been annotated on this Genbank file.</p>
+
+            {% elif ir_result.ir_reported = "exception" %}
+            <p>This file is an exception. Only one or no IRs are present.</p>
+
         {% else %}
             <p>No Genbank file found for {{ accession }}.</p>
             <a href="https://www.ncbi.nlm.nih.gov/nuccore/{{ accession }}"><p>

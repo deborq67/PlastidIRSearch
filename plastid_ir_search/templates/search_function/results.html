@@ -73,15 +73,14 @@
               <td>{{ result.Updated }}</td>
               <td>{{ result.Created }}</td>
 
-                {% if result.ira_reported == "yes" or result.irb_reported == "yes" %}
+                {% if result.ir_reported == "yes" %}
                     <td><i class="bi bi-check-circle-fill text-success"></i></td>
 
-                {% elif result.ira_reported == "no" or result.ira_reported == "no" %}
+                {% elif result.ir_reported == "no" %}
                     <td><i class="bi bi-x-circle-fill text-danger"></i></td>
 
-                    {% comment %}
-                    Got to add an elif for ambiguous cases. Will do later.
-                    {% endcomment %}
+                {% elif result.ir_reported == "exception" %}
+                    <td><i class="bi bi-slash-circle-fill text-info"></i></td>
 
                 {% else %}
                     <td><i class="bi bi-dash-circle-fill text-secondary"></i></td>

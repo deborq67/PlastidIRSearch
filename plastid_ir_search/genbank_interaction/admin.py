@@ -4,7 +4,7 @@ from .models import IR_Identification
 
 @admin.register(IR_Identification)
 class IRCalculationAdmin(ModelAdmin):
-    exclude = ["irb_reported"]
+    exclude = ["ir_reported", "irb_reported"]
     conditional_fields = {
         "ira_reported_start": "ira_reported == 'yes' || ira_reported == 'exception' ",
         "ira_reported_end": "ira_reported == 'yes' || ira_reported == 'exception'",

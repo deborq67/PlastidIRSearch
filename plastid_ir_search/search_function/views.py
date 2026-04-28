@@ -7,9 +7,6 @@ import pandas as pd
 import polars as pl
 from django.http import HttpResponse
 from django_pandas.io import read_frame
-
-from genbank_interaction.ir_operations import IROperations
-
 from django.core.paginator import (Paginator, EmptyPage, PageNotAnInteger)
 
 
@@ -35,13 +32,18 @@ def search(request):
         if not request.session.session_key:
             request.session.create()
 
+        #Put the search term and records into history.
+
         history_record = SearchHistory.objects.create(
             session_key=request.session.session_key,
             search_term=search_term,
             total_records=total_records,
         )
 
+        #Make a dictionary of dictionaries
+
         result_instances = []
+
         for record in search_dict:
             ir_result = IR_Identification.objects.filter(accession=record['Accession']).first()
             result = SearchResult.objects.create(
@@ -54,11 +56,9 @@ def search(request):
             )
             result_instances.append(result)
             if ir_result:
-                record['ira_reported'] = ir_result.ira_reported
-                record['irb_reported'] = ir_result.irb_reported
+                record['ir_reported'] = ir_result.ira_reported
             else:
-                record['ira_reported'] = 'n/a'
-                record['irb_reported'] = 'n/a'
+                record['ir_reported'] = 'n/a'
 
         #Save history.
         history_record.results.set(result_instances)
@@ -94,7 +94,6 @@ def history(request):
     history_records = SearchHistory.objects.filter(
         session_key=request.session.session_key
     ).values('search_term', 'total_records', 'searched_at').order_by('-searched_at')
-
     default_page = 1
     page = request.GET.get('page', default_page)
     paginator = Paginator(history_records, 20)
@@ -104,7 +103,19 @@ def history(request):
         results_page = paginator.page(default_page)
     except EmptyPage:
         results_page = paginator.page(paginator.num_pages)
+
     return render(request, 'search_function/history.html', {"history_records": results_page})
+
+
+#This extracts a list of Accession numbers for a separate page.
+
+def accession_list(request):
+
+    history_accessions = SearchHistory.objects.filter(
+        session_key=request.session.session_key
+    ).values('results__accession').order_by('results__accession')
+
+    return render(request, 'search_function/accessions.html', {"history_accessions": history_accessions})
 
 
 def download_results(request):
@@ -113,7 +124,7 @@ def download_results(request):
         polars equivalent. From there I can convert to Polars and do the following.'''
         searchresult_qs = SearchResult.objects.all()
         df = read_frame(searchresult_qs,
-                        fieldnames=['accession', 'title', 'bp_length', 'updated', 'created', 'ira_info__ira_reported'])
+                        fieldnames=['accession', 'title', 'bp_length', 'updated', 'created', 'ir_info__ir_reported'])
         df = pl.from_pandas(df)
         df = df.with_columns(pl.col('updated').dt.strftime('%Y-%m-%d'))
         df = df.with_columns(pl.col('created').dt.strftime('%Y-%m-%d'))
@@ -122,7 +133,7 @@ def download_results(request):
                         "bp_length": "Base_Pair_Length",
                         "updated": "Updated",
                         "created": "Created",
-                        "ir_info__ira_reported": "IRs_Reported"})
+                        "ir_info__ir_reported": "IRs_Reported"})
         response = HttpResponse(df.write_csv(), content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_results.csv"'
         return response
@@ -132,12 +143,13 @@ def download_results(request):
 def download_history(request):
     if request.GET.get('download'):
         searchhistory_qs = SearchHistory.objects.all()
-        df = read_frame(searchhistory_qs, fieldnames=['search_term', 'total_records', 'searched_at'])
-        df['searched_at'] = pd.to_datetime(df['searched_at']).dt.strftime('%Y-%m-%d %H:%M:%S')
-        df = df.rename(columns={"search_term": "Search_Term",
-                                "total_records": "Records_Found",
-                                "searched_at": "Timestamp"})
-        response = HttpResponse(df.to_csv(index=False), content_type='text/csv')
+        df = read_frame(searchhistory_qs, fieldnames=['search_term', 'total_records', 'searched_at', ])
+        df = pl.from_pandas(df)
+        df = df.with_columns(pl.col('updated').dt.strftime('%Y-%m-%d %H:%M:%S'))
+        df = df.rename({"search_term": "Search_Term",
+                        "total_records": "Records_Found",
+                        "searched_at": "Timestamp"})
+        response = HttpResponse(df.write_csv(), content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_history.csv"'
         return response
     return render(request, "search_function/download.html")
