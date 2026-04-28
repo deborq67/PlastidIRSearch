@@ -43,6 +43,7 @@ History
                 <th scope="col">Search Term</th>
               <th scope="col">Records Found</th>
               <th scope="col">Timestamp</th>
+                <th scope="col">Accessions Found</th>
             </tr>
           </thead>
           <tbody>
@@ -51,6 +52,7 @@ History
               <td>{{ record.search_term  }}</td>
               <td>{{ record.total_records  }}</td>
               <td>{{ record.searched_at  }}</td>
+              <td><a href="{% url 'accession_list' %}?id={{ record.id }}" class="btn btn-outline-dark">View Accessions</a></td>
             </tr>
             {% endfor %}
           </tbody>

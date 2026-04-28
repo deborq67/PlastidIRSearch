@@ -7,7 +7,7 @@
     <div class="container">
         <h2 class="mb-2">IR Identification for {{ accession }}</h2>
 
-        {% if ir_result.ira_reported == "yes" or ir_result.irb_reported == "yes" %}
+        {% if ir_result.ir_reported == "yes" %}
         <div class="table">
             <table class="table table-hover">
                 <tbody>
@@ -45,10 +45,10 @@
             </table>
         </div>
 
-            {% elif ir_result.ir_reported = "no" %}
+            {% elif ir_result.ir_reported == "no" %}
             <p>No IRs have been annotated on this Genbank file.</p>
 
-            {% elif ir_result.ir_reported = "exception" %}
+            {% elif ir_result.ir_reported == "exception" %}
             <p>This file is an exception. Only one or no IRs are present.</p>
 
         {% else %}
