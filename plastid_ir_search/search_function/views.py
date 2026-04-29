@@ -113,18 +113,21 @@ def history(request):
 #This extracts a list of Accession numbers for a separate page.
 
 def accession_list(request):
-    id = request.GET.get('id')
+    search_id = request.GET.get('id')
     history_accessions = SearchHistory.objects.get(
-        id=id, session_key=request.session.session_key
+        id=search_id, session_key=request.session.session_key
     ).search_accessions.split(',')
     history_accessions.sort()
-    return render(request, 'search_function/accessions.html', {"history_accessions": history_accessions})
+    return render(request, 'search_function/accessions.html',
+                  {"history_accessions": history_accessions,
+                          "search_id": search_id})
 
 
 def download_results(request):
 
-    '''Django-Pandas is great at turning the df into a Pandas df since there isn't a really good
-    polars equivalent. From there I can convert to Polars and do the following.'''
+    '''Django-Pandas is great at turning the df into a Pandas df since there isn't really a good
+    Polars equivalent. From there I can convert to Polars and do the rest.'''
+
     searchresult_qs = SearchResult.objects.all()
     df = read_frame(searchresult_qs,
                     fieldnames=['accession', 'title', 'bp_length', 'updated', 'created', 'ir_info__ir_reported'])
@@ -144,7 +147,7 @@ def download_results(request):
 def download_history(request):
 
     #Same logic as download_results, but for the history page.
-
+    search_id = request.GET.get('id')
     searchhistory_qs = SearchHistory.objects.all()
     df = read_frame(searchhistory_qs, fieldnames=['search_term', 'total_records', 'searched_at'])
     df = pl.from_pandas(df)
@@ -158,20 +161,27 @@ def download_history(request):
 
 def download_accessions(request):
 
-    #Same logic as download_results, but for the history page.
+    #Same logic as download_results, but for the accession records.
 
+    search_id = request.GET.get('id')
     searchhistory_qs = SearchHistory.objects.all()
-    history_accession_df = read_frame( searchhistory_qs ,fieldnames=['id','accession'])
+    history_accession_df = read_frame( searchhistory_qs ,fieldnames=['id','search_accessions'])
     history_accession_df = pl.from_pandas(history_accession_df)
+    history_accession_df = history_accession_df.with_columns(pl.col("search_accessions")
+                                      .str.split(",")).explode("search_accessions")
+    history_accession_df = history_accession_df.rename({"search_accessions": "accession"})
 
     ir_info_qs = IR_Identification.objects.all()
     ir_info_df = read_frame(ir_info_qs, fieldnames=['accession', 'ir_reported'])
     ir_info_df = pl.from_pandas(ir_info_df)
-
-    df = df.with_columns(pl.col('searched_at').dt.strftime('%Y-%m-%d %H:%M:%S'))
-    df = df.rename({"search_term": "Search_Term",
-                        "total_records": "Records_Found",
-                        "searched_at": "Timestamp"})
-    response = HttpResponse(df.write_csv(), content_type='text/csv')
+    final_df = (
+        history_accession_df
+        .filter(pl.col("id") == int(search_id))
+        .join(ir_info_df, on="accession", how="inner")
+    )
+    final_df = final_df.rename({"accession": "Accession_ID",
+                        "ir_reported": "IR_Reported"})
+    final_df = final_df.drop('id')
+    response = HttpResponse(final_df.write_csv(), content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_history.csv"'
     return response

@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 
 
 class SearchResult(models.Model):
@@ -24,7 +23,7 @@ class SearchHistory(models.Model):
     search_term = models.CharField(max_length=255)
     total_records = models.IntegerField()
     searched_at = models.DateTimeField(auto_now_add=True)
-    results = models.ManyToManyField(SearchResult)
+    search_accessions = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.search_term} - {self.searched_at.strftime('%B %d, %Y %H:%M')}"

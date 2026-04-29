@@ -6,7 +6,7 @@ History
 
 {% block header %}
 <br>
-     <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#DownloadHistoryModal">Download History</a>
+     <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#DownloadHistoryModal">Download Accessions</a>
 
 <div class="modal fade" id="DownloadHistoryModal" tabindex="-1" aria-labelledby="HistoryModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -16,11 +16,11 @@ History
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to download History?</p>
+        <p>Are you sure you want to download Accession List?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a href="{% url 'download_history' %}?download=true" class="btn btn-primary">Yes</a>
+        <a href="{% url 'download_accessions' %}?id={{ search_id }}" class="btn btn-primary">Yes</a>
       </div>
     </div>
   </div>
@@ -32,6 +32,8 @@ History
 
     <div class="content">
   <div class="container">
+  <a href="{% url 'history' %}" class="btn btn-outline-dark" role="button">Back to History</a>
+  <br>
     <h2 class="mb-2">Accessions Found</h2>
     <br>
 
