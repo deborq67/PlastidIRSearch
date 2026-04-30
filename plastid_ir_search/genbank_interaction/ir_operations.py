@@ -497,6 +497,7 @@ class IROperations:
         fields = {
             "ACCESSION": self.rec.id,
             "TITLE": self.rec.description,
+            "UPDATED": self.rec.annotations.get('date', None),
             "IR_REPORTED": ir_reported,
             "IRa_REPORTED": "yes" if ira_feature else "no",
             "IRa_REPORTED_START": ira_feature.location.start + 1 if ira_feature else None,
@@ -508,12 +509,15 @@ class IROperations:
             "IRb_REPORTED_LENGTH": int(len(irb_feature)) if irb_feature else None,
         }
         #Forces columns to be integers to avoid any conflicts for null values.
-        df = pl.DataFrame([fields]).cast({
+        df = (pl.DataFrame([fields]).with_columns(
+            pl.col("UPDATED").str.to_datetime("%d-%b-%Y"))
+            .cast({
+            "UPDATED": pl.Date,
             "IRa_REPORTED_START": pl.Int64,
             "IRa_REPORTED_END": pl.Int64,
             "IRa_REPORTED_LENGTH": pl.Int64,
             "IRb_REPORTED_START": pl.Int64,
             "IRb_REPORTED_END": pl.Int64,
             "IRb_REPORTED_LENGTH": pl.Int64,
-        })
+        }))
         return df

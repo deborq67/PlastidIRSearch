@@ -1,4 +1,5 @@
 from django.db import models
+import plotly.express as px
 
 
 class IR_Identification(models.Model):
@@ -15,6 +16,7 @@ class IR_Identification(models.Model):
 
     accession = models.CharField(max_length=50, unique=True)
     title = models.TextField(default="No Title")
+    updated = models.DateTimeField(null=True, blank=True)
     ir_reported = models.CharField(max_length=50, default="no")
     ira_reported = models.CharField(max_length=50, choices=IRA_CHOICES, verbose_name="Inverted Repeat A Reported?")
     ira_reported_start = models.IntegerField(null=True, blank=True,
@@ -32,3 +34,5 @@ class IR_Identification(models.Model):
 
     class Meta:
         verbose_name = "IR Identification"
+
+

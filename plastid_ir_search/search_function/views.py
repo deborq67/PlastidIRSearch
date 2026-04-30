@@ -13,6 +13,9 @@ from django.core.paginator import (Paginator, EmptyPage, PageNotAnInteger)
 def index(request):
     return render(request, 'index.html')
 
+def about(request):
+    return render(request, 'about.html')
+
 
 def search(request):
     if request.method == 'POST':
@@ -147,7 +150,7 @@ def download_results(request):
 def download_history(request):
 
     #Same logic as download_results, but for the history page.
-    search_id = request.GET.get('id')
+
     searchhistory_qs = SearchHistory.objects.all()
     df = read_frame(searchhistory_qs, fieldnames=['search_term', 'total_records', 'searched_at'])
     df = pl.from_pandas(df)

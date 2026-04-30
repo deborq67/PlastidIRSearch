@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from multiprocessing import Pool
 from django.conf import settings
 
+
 #Separate function for parsing needed for multiprocessing to work.
 
 def parse_file(filepath):
@@ -25,10 +26,10 @@ class Command(BaseCommand):
 
         # Named (optional) arguments
         parser.add_argument(
-            "--ignore",
-            "-i",
+            "--update",
+            "-u",
             action="store_true",
-            help="Ignore duplicate entries instead of updating them.",
+            help="Updates duplicates instead of ignoring them.",
         )
 
     def handle(self, *args, **options):
@@ -41,23 +42,25 @@ class Command(BaseCommand):
         ]
 
         if not file_list:
-            self.stdout.write('The "genbank_files" directory can not be found. Make sure it is on the same level as manage.py.')
+            self.stdout.write(
+                'The "genbank_files" directory can not be found. Make sure it is on the same level as manage.py.')
             return
 
-        #Ignore duplicates rather than updating them.
+        #Ignore duplicates by default.
 
-        if options["ignore"]:
+        if not options["update"]:
             current_records = set(IR_Identification.objects.values_list('accession', flat=True))
             file_list = [
                 f for f in file_list
                 if os.path.splitext(os.path.basename(f))[0] not in current_records
             ]
             if not file_list:
-                self.stdout.write("No new files to process.")
+                self.stdout.write('No new files to process.')
                 return
-            self.stdout.write(f"{len(file_list)} new files to process.")
 
-        self.stdout.write(f"Processing {len(file_list)} files...")
+        self.stdout.write(f'{len(file_list)} new files to process.')
+
+        self.stdout.write(f"Processing...")
 
         with Pool() as pool:
             results = pool.map(parse_file, file_list)
@@ -65,7 +68,7 @@ class Command(BaseCommand):
         processed_results = [file_result for file_result in results if file_result is not None]
 
         if not processed_results:
-            self.stdout.write('\n No new files to process.')
+            self.stdout.write('No new files to process.')
             return
 
         df = pl.concat(processed_results)
@@ -76,6 +79,7 @@ class Command(BaseCommand):
             IR_Identification(
                 accession=row['ACCESSION'],
                 title=row['TITLE'],
+                updated=row['UPDATED'],
                 ir_reported=row['IR_REPORTED'],
                 ira_reported=row['IRa_REPORTED'],
                 ira_reported_start=row['IRa_REPORTED_START'],
@@ -85,31 +89,29 @@ class Command(BaseCommand):
                 irb_reported_start=row['IRb_REPORTED_START'],
                 irb_reported_end=row['IRb_REPORTED_END'],
                 irb_reported_length=row['IRb_REPORTED_LENGTH'],
-                )
+            )
             for row in df_dict
-            ]
+        ]
 
-        if options["ignore"]:
-            IR_Identification.objects.bulk_create(
-                genbank_records,
-                batch_size=1000,
-                ignore_conflicts=True
-                )
-            self.stdout.write(f'Ignored duplicate entries and wrote {len(genbank_records)} files.')
-
-        else:
+        if options["update"]:
             IR_Identification.objects.bulk_create(
                 genbank_records,
                 batch_size=1000,
                 update_conflicts=True,
                 unique_fields=['accession'],
                 update_fields=[
-                    'title', 'ir_reported', 'ira_reported', 'ira_reported_start',
+                    'title', 'updated','ir_reported', 'ira_reported', 'ira_reported_start',
                     'ira_reported_end', 'ira_reported_length',
                     'irb_reported', 'irb_reported_start',
                     'irb_reported_end', 'irb_reported_length'
                 ]
-                )
+            )
+            self.stdout.write(f'Updated {len(genbank_records)} entries.')
 
-
-        self.stdout.write(f'Folder successfully processed {len(genbank_records)} files.')
+        else:
+            IR_Identification.objects.bulk_create(
+                genbank_records,
+                batch_size=1000,
+                ignore_conflicts=True
+            )
+            self.stdout.write(f'Ignored duplicate entries and wrote {len(genbank_records)} files.')
