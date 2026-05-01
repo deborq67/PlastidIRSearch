@@ -53,9 +53,12 @@ def search(request):
             SearchResult.objects.all().delete()
 
         # Take out white space if user makes a search. Convert to dictionary for model conversion.
+
         search_term = request.POST.get('search_term', '').strip()
         search_query, total_records = initiate_search(search_term)
+        
         #Sort by most recently updates THEN turn to a dictionary for model purposes.
+        
         search_dict = search_query.sort('Updated', descending=True, nulls_last=True).to_dicts()
 
         #Generate a session if not one yet made.
