@@ -220,5 +220,5 @@ def download_accessions(request):
                         'ir_reported': 'IR_Reported'})
     final_df = final_df.drop('id')
     response = HttpResponse(final_df.write_csv(), content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_history.csv"'
+    response['Content-Disposition'] = 'attachment; filename="plastid_ir_history_accessions.csv"'
     return response
