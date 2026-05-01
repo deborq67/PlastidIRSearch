@@ -36,17 +36,33 @@ search engine, no registration needed!
 
 ![OrganelleSearchHome.png](https://i.ibb.co/hJfzx0qB/Organelle-Register.png) <br>
 
+### About
+
+On the button at the hand-hand corner. This button mainly tells you basic information and *some* FAQS
+about the project so you don't have to look at the Github page every time you want to do find something
+out. Mainly, it has a legend for the symbols in inverted repeats in case you want to know what each one does.
+<br>
+
 ### Searches
 
 You can search any eukaryotic organism you want on this search engine. Be it rice, a species
-of seaweed, or even a potato. For maximum results, I highly suggest you use the scientific name of the organism you want to look up. <br>
+of seaweed, or even a potato. For maximum results, I highly suggest you use the scientific family or family of the organism you want to look up.
+Be warned though that due to rate-limiting, the results will be slower the more results generated.<br>
 
 If you get no results, don't worry: just search again. <br>
 
 ![OrganelleResults.png](https://i.ibb.co/4nGDNNWv/Organelle-Results.png) <br>
 
-When you're done looking at the results, click the `New Search` button again
-to go back to the home page. <br>
+Unlike my previous projects, the purpose of Plastid IR Search is to tell you information on whether inverted repeats were *annotated* in the actual
+genetic records of these plants and algae which is achieved via the analysis of more than 40000 genetic records. The check mark means both inverted
+repeats were annotated, the X means none were annotated, and the grey dash means the file was not found. YOu may have noticed that the `Accession` column is hyperlinked. That's because when you click on it, a different output appears depending on what `IR Reported in Record File?` says. If you click on it when there is an X, the program will simply tell you there was nothing found. If you click on a row with a dash however:
+
+#########################################
+
+
+
+When you're done looking at the results, click the logo or
+make a new search using the Result search bar. <br>
 
 Need some ideas of what to search for? Try these organisms:
  * *Solanum tuberosum* - Potato
@@ -63,6 +79,13 @@ of when said search was executed. <br>
 If you have a Django admin account, you can also visit the Django admin page to view, delete,
 and edit the search histories of users, including yours. Specifically, you can edit the amount
 of records found and the search term itself if you so choose.
+
+### Accession Finds
+
+On the button at the hand-hand corner. This button mainly tells you basic information and *some* FAQS
+about the project so you don't have to look at the Github page every time you want to do find something
+out. Mainly, it has a legend for the symbols in inverted repeats in case you want to know what each one does.
+<br>
 
 
 ## Getting Started
