@@ -88,6 +88,12 @@ out. Mainly, it has a legend for the symbols in inverted repeats in case you wan
 <br>
 
 
+### Admin Page
+
+Completely redone and makes adding Accession Records much easier.
+
+
+
 ## Getting Started
 
 ### Installing
