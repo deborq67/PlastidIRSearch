@@ -67,12 +67,12 @@ downloaded and processed using the ir_setup command. From there, Plastid IR Sear
       <br>
 
 <h1>FAQs</h1>
-
+<br>
 <h3> What are plastids?</h3>
-
+<br>
 <p> Almost all multicellular organisms have subunits, or mini-organs in their cells
     which we call organelles. Some of these organelles, such as mitochondria and chloroplasts,
-    are believed to have evolved from bacteria billions of years and have remnants of their ancestral
+    are believed to have evolved from bacteria billions of years ago and have remnants of their ancestral
     DNA which make up their genome.
 </p>
 <br>
@@ -81,16 +81,43 @@ downloaded and processed using the ir_setup command. From there, Plastid IR Sear
     organisms, are the most well-known form of plastid.
 </p>
 
+<br>
+
 <h3> What are inverted repeats?</h3>
+<br>
+  <p>   Basically, these are two separate
+sections of the genome that are "opposites" (complements) of each other and, when lined up, match each other's
+      opposing base. For example, IrA (the first inverted repeat) could look like:
+  </p>
+ <br>
+      <div class="text-center pt-3">
+    <code class="text-primary fs-4">GCTTATTCTCTATGCGGGG</code>
+</div>
+      <br>
+
+and then IrB would be the same sequence backwards and have its A bases swapped
+      with Ts and Cs swapped with Gs (and vice versa) and it will look like:
+
+      <div class="text-center pt-3">
+    <code class="text-primary fs-4">CCCCGCATAGAGAATAAGC</code>
+</div>
+      <br>
+
 
 <h3> This file does have proper inverted repeats so why is it saying there are none found? </h3>
+
+      <br>
 
 <p> This program only checks if the IRs were manually annotated in the Genbank record, not
     if the DNA sequence truly has any inverted repeats or not. A good analogy for this is
     it checks if you put your name on the assignment, but not if you actually did the
     assignment itself. </p>
 
+      <br>
+
 <h3> Why did these files have to be downloaded and not instead done via the API? </h3>
+
+      <br>
 
 <p> NCBI states that their API can only be used at a rate of 3 request per second without an
     API key. If you go any faster than that, your connection could be arbitrarily closed which
