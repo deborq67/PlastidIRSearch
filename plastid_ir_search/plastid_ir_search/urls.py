@@ -1,26 +1,18 @@
-"""
-URL configuration for plastid_ir_search project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from encodings import search_function
-
 from django.contrib import admin
 from django.urls import path
-import search_function.views
+from search_function.views import search, index, history, download_history, download_results, accession_list, \
+    download_accessions, about
+from genbank_interaction.views import ir_info
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', search_function.views.index, name='index'),
+    path('', index, name='index'),
+    path('results/', search, name='search'),
+    path('results/download/', download_results, name='download_results'),
+    path('results/<str:accession>/', ir_info, name='ir_info'),
+    path('history/', history, name='history'),
+    path('history/accessions/', accession_list, name='accession_list'),
+    path('history/download/', download_history, name='download_history'),
+    path('history/accession/download/', download_accessions, name='download_accessions'),
+    path('about/', about, name='about'),
 ]
