@@ -78,15 +78,44 @@ The next section will tell you how to install it.
  
 ### Executing the Program
  
-First and foremost, you need to download the entire GenBank <br>
+Given the complexity of this program, you will have several steps before you can use it.
 
-First, download the `organellebaseflask.zip` and extract the `organellebaseflask`
-directory from it. *This will be the working directory you will execute Python from.*
+#### Step 1: Get your dependencies installed.
 
 * From the directory, get all your dependencies by executing this line on Python:
 ```
 pip install -r requirements.txt
 ```
+
+#### Step 2: Download the Genbank folder and put it in the plastid_ir_search folder.
+
+NOT in the `PlastidIRSearch` folder (your root.) Put the folder on the same level as manage.py, you'll see
+why later. As you do so, be sure to also  run `cd ./plastid_ir_search` on your terminal (both Windows and Linux).
+
+[Download the needed folder here.](https://drive.google.com/file/d/1D-JlTBUCT_bMl8UBFwnFtCS_qHYZx6ur/view?usp=drive_link)
+
+Fair warning: This folder is around 1.1 GB large and fully decompressed, you're looking at almost 14 GB. It contains over 40000
+publicly-available genetic records from [NCBI Genbank.](https://www.ncbi.nlm.nih.gov/genbank/) Don't change the name of the folder.
+
+#### Step 2: Get the models created.
+
+Needed to store important information later on. Just do:
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+#### Step 3: Execute ir_setup.
+
+This is a custom command that will generate IR values to be associated with each search. It detects that exact `genbank_files` folder on
+the manage.py level. 
+
+and extract the `organellebaseflask`
+directory from it. *This will be the working directory you will execute Python from.*
+
+
+
 * Afterwards, you must make the tables Organelle Search uses to display results and keep track of users. Execute this:
 ```
 flask --app organellebaseflask init-db
