@@ -4,7 +4,6 @@ from .models import SearchResult, SearchHistory
 from genbank_interaction.models import IR_Identification
 from datetime import datetime, date
 import polars as pl
-import pandas as pd
 from django.http import HttpResponse
 import plotly.express as px
 from django_pandas.io import read_frame
@@ -56,7 +55,8 @@ def search(request):
         # Take out white space if user makes a search. Convert to dictionary for model conversion.
         search_term = request.POST.get('search_term', '').strip()
         search_query, total_records = initiate_search(search_term)
-        search_dict = search_query.to_dicts()
+        #Sort by most recently updates THEN turn to a dictionary for model purposes.
+        search_dict = search_query.sort('Updated', descending=True, nulls_last=True).to_dicts()
 
         #Generate a session if not one yet made.
 
@@ -95,15 +95,21 @@ def search(request):
         #Save history.
         history_record.save()
 
+        #Save terms for paginator.
+
         request.session['search_dict'] = search_dict
         request.session['search_term'] = search_term
         request.session['total_records'] = total_records
 
         return redirect('/results/')
 
+    #Use search results for paginator.
+
     search_dict = request.session.get('search_dict', [])
     search_term = request.session.get('search_term', '')
     total_records = request.session.get('total_records', 0)
+
+    #Do it by 20 results per page.
 
     default_page = 1
     page = request.GET.get('page', default_page)
