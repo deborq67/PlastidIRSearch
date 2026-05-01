@@ -149,6 +149,20 @@ can make is 3 per second. Same reason the maximum amount of results shown is 500
 This has already been accounted for in the script and a limit was placed so even if
 you misspell your email, you shouldn't be blocked. However, please try to put a valid email.
 
+* **ERROR: Could not find a version that satisfies the requirement package==version_number**
+
+This has happened to me a couple of times. Usually it means that the Python environment you are using has repositories not yet updated. In fact,
+the Biopython I was using during this project is the latest version that came one month ago! Try setting up a .venv to remedy that doing:
+```
+python -m venv .venv
+source .venv/bin/activate
+```
+or depending on what type of Python you have:
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
 ## Authors
  
 * David Bohorquez
