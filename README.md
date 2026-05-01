@@ -34,7 +34,7 @@ records and if they're present, it gives the exact locations according to the no
 Just like any search engine, make your search by typing whatever plant or alga you want into the
 search engine, no registration needed!
 
-![OrganelleSearchHome.png](https://i.ibb.co/hJfzx0qB/Organelle-Register.png) <br>
+![PlastidIRHome.png](https://i.ibb.co/2LFCvbj/Plastid-IRHome.png) <br>
 
 ### About
 
