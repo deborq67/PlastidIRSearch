@@ -109,37 +109,38 @@ python manage.py migrate
 #### Step 3: Execute ir_setup.
 
 This is a custom command that will generate IR values to be associated with each search. It detects that exact `genbank_files` folder on
-the manage.py level. 
+the manage.py level. This step will take a few minutes since it is computing more than 40000 files. Just do:
 
-and extract the `organellebaseflask`
-directory from it. *This will be the working directory you will execute Python from.*
+```
+python manage.py ir_setup
+```
 
+OPTIONAL: If you ever want to update your existing files already on tables for any reason, you can do:
+```
+python manage.py ir_setup -u
+```
+#### Step 4: Run the server.
+Just do:
+```
+python manage.py runserver
+```
+After that, the search engine should be up and running and look like the following:
 
+```
+Watching for file changes with StatReloader
+Performing system checks...
 
-* Afterwards, you must make the tables Organelle Search uses to display results and keep track of users. Execute this:
-```
-flask --app organellebaseflask init-db
-```
-* Finally, execute this line:
-```
-flask --app organellebaseflask 
-```
-If all goes well, you should see an output of:
-```
-* Serving Flask app 'organellebaseflask'
-* Debug mode: off
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
-* Running on http://127.0.0.1:5000
+System check identified no issues (0 silenced).
+May 01, 2026 - 07:58:08
+Django version 6.0.4, using settings 'plastid_ir_search.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
 ```
 Visit the address and the page should look like the first screenshot. You have
 successfully deployed Organelle Search on your own device!
 
 ## Help
 
-* **Why do I have to make an account to search?**
-
-Because the API (Entrez in this case) requires an email in order to conduct a search. The email
-you use to make your account is the one that is used for said search to be executed.
 
 * **Why is the program so slow?**
 
