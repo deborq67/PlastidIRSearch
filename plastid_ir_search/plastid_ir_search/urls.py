@@ -1,7 +1,15 @@
 from django.contrib import admin
 from django.urls import path
-from search_function.views import search, index, history, download_history, download_results, accession_list, \
-    download_accessions, about
+from search_function.views import (
+    search,
+    index,
+    history,
+    download_history,
+    download_results,
+    accession_list,
+    download_accessions,
+    about,
+)
 from genbank_interaction.views import ir_info
 
 urlpatterns = [

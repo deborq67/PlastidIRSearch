@@ -11,9 +11,7 @@ from django.core.paginator import (Paginator, EmptyPage, PageNotAnInteger)
 
 
 def index(request):
-
-    #This whole part is to render a html graph.
-
+    # This whole part is to render a html graph.
     histogram_qs = IR_Identification.objects.all()
     histogram_df = read_frame(histogram_qs, fieldnames=['updated', 'accession', 'ir_reported'])
 
@@ -24,10 +22,16 @@ def index(request):
     histogram_df = histogram_df.drop('ir_reported')
 
     histogram_df = histogram_df.with_columns(pl.col('updated').cast(pl.Date))
-    histogram_df = histogram_df.rename({'accession': 'Accession IDs', 'updated': 'Last Update'})
+    histogram_df = histogram_df.rename(
+        {'accession': 'Accession IDs', 'updated': 'Last Update'}
+    )
 
-    plastid_histogram = px.histogram(histogram_df, x='Last Update',
-                        title='Total Annotated Plastid Records Uploaded to GenBank Over Time', template='none')
+    plastid_histogram = px.histogram(
+        histogram_df,
+        x='Last Update',
+        title='Total Annotated Plastid Records Uploaded to GenBank Over Time',
+        template='none'
+    )
 
     plastid_histogram.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
@@ -36,9 +40,14 @@ def index(request):
         yaxis=dict(rangemode='nonnegative', title="Records"),
     )
 
-    plastid_histogram = plastid_histogram.to_html(full_html=False, include_plotlyjs=False, config={'responsive': True})
+    plastid_histogram = plastid_histogram.to_html(
+        full_html=False,
+        include_plotlyjs=False,
+        config={'responsive': True}
+    )
 
     return render(request, 'index.html', {'plastid_histogram': plastid_histogram})
+
 
 def about(request):
     return render(request, 'about.html')
@@ -56,37 +65,61 @@ def search(request):
 
         search_term = request.POST.get('search_term', '').strip()
         search_query, total_records = initiate_search(search_term)
-        
-        #Sort by most recently updates THEN turn to a dictionary for model purposes.
-        
-        search_dict = search_query.sort('Updated', descending=True, nulls_last=True).to_dicts()
 
-        #Generate a session if not one yet made.
-
+        # Generate a session if not one yet made.
         if not request.session.session_key:
             request.session.create()
 
-        #Put the search term,into history.
+        # If no records found, return to results page with message.
+        if search_query.is_empty():
+            SearchHistory.objects.create(
+                session_key=request.session.session_key,
+                search_term=search_term,
+                total_records=0,
+                search_accessions='',
+            )
+            return render(request, 'search_function/results.html', {
+            'search_term': search_term,
+            'results': [],
+            'total_records': 0,
+            })
+        
+        # Sort by most recently updates THEN turn to a dictionary for model purposes.
+        search_dict = search_query.sort(
+            'Updated',
+            descending=True,
+            nulls_last=True
+        ).to_dicts()
 
+        # Put the search term into history.
         history_record = SearchHistory.objects.create(
             session_key=request.session.session_key,
             search_term=search_term,
             total_records=total_records,
-            search_accessions=','.join([record['Accession'] for record in search_dict])
+            search_accessions=','.join(
+                [record['Accession'] for record in search_dict]
+            )
         )
 
-        #Make a dictionary of dictionaries
-
+        # Make a dictionary of dictionaries
         result_instances = []
 
         for record in search_dict:
-            ir_result = IR_Identification.objects.filter(accession=record['Accession']).first()
+            ir_result = IR_Identification.objects.filter(
+                accession=record['Accession']
+            ).first()
             result = SearchResult.objects.create(
                 accession=record['Accession'],
                 title=record['Title'],
                 bp_length=record['BP_Length'],
-                updated=datetime.strptime(record['Updated'], '%Y/%m/%d') if record['Updated'] else None,
-                created=datetime.strptime(record['Created'], '%Y/%m/%d') if record['Created'] else None,
+                updated=datetime.strptime(
+                    record['Updated'],
+                    '%Y/%m/%d'
+                ) if record['Updated'] else None,
+                created=datetime.strptime(
+                    record['Created'],
+                    '%Y/%m/%d'
+                ) if record['Created'] else None,
                 ir_info=ir_result,
             )
             result_instances.append(result)
@@ -95,25 +128,22 @@ def search(request):
             else:
                 record['ir_reported'] = 'n/a'
 
-        #Save history.
+        # Save history.
         history_record.save()
 
-        #Save terms for paginator.
-
+        # Save terms for paginator.
         request.session['search_dict'] = search_dict
         request.session['search_term'] = search_term
         request.session['total_records'] = total_records
 
         return redirect('/results/')
 
-    #Use search results for paginator.
-
+    # Use search results for paginator.
     search_dict = request.session.get('search_dict', [])
     search_term = request.session.get('search_term', '')
     total_records = request.session.get('total_records', 0)
 
-    #Do it by 20 results per page.
-
+    # Do it by 20 results per page.
     default_page = 1
     page = request.GET.get('page', default_page)
     paginator = Paginator(search_dict, 20)
@@ -131,8 +161,7 @@ def search(request):
     })
 
 
-#This loads the history into a table.
-
+# This loads the history into a table.
 def history(request):
     history_records = SearchHistory.objects.filter(
         session_key=request.session.session_key
@@ -150,65 +179,100 @@ def history(request):
     return render(request, 'search_function/history.html', {'history_records': results_page})
 
 
-#This extracts a list of Accession numbers for a separate page.
-
+# This extracts a list of Accession numbers for a separate page.
 def accession_list(request):
     search_id = request.GET.get('id')
     history_accessions = SearchHistory.objects.get(
         id=search_id, session_key=request.session.session_key
     ).search_accessions.split(',')
     history_accessions.sort()
-    return render(request, 'search_function/accessions.html',
-                  {'history_accessions': history_accessions,
-                          'search_id': search_id})
+    return render(
+        request,
+        'search_function/accessions.html',
+        {
+            'history_accessions': history_accessions,
+            'search_id': search_id
+        }
+    )
 
 
 def download_results(request):
-
-    '''Django-Pandas is great at turning the df into a Pandas df since there isn't really a good
-    Polars equivalent. From there I can convert to Polars and do the rest.'''
-
+    # Django-Pandas is great at turning the df into a Pandas df since there
+    # isn't really a good Polars equivalent. From there I can convert to
+    # Polars and do the rest.
     searchresult_qs = SearchResult.objects.all()
-    df = read_frame(searchresult_qs,
-                    fieldnames=['accession', 'title', 'bp_length', 'updated', 'created', 'ir_info__ir_reported'])
+    df = read_frame(
+        searchresult_qs,
+        fieldnames=[
+            'accession',
+            'title',
+            'bp_length',
+            'updated',
+            'created',
+            'ir_info__ir_reported'
+        ]
+    )
     df = pl.from_pandas(df)
     df = df.with_columns(pl.col('updated').dt.strftime('%Y-%m-%d'))
     df = df.with_columns(pl.col('created').dt.strftime('%Y-%m-%d'))
-    df = df.rename({'accession': 'Accession',
-                        'title': 'Title',
-                        'bp_length': 'Base_Pair_Length',
-                        'updated': 'Updated',
-                        'created': 'Created',
-                        'ir_info__ir_reported': 'IRs_Reported'})
+    df = df.rename(
+        {
+            'accession': 'Accession',
+            'title': 'Title',
+            'bp_length': 'Base_Pair_Length',
+            'updated': 'Updated',
+            'created': 'Created',
+            'ir_info__ir_reported': 'IRs_Reported'
+        }
+    )
     response = HttpResponse(df.write_csv(), content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_results.csv"'
+    response['Content-Disposition'] = (
+        'attachment; filename="plastid_ir_search_results.csv"'
+    )
     return response
+
 
 def download_history(request):
-
-    #Same logic as download_results, but for the history page.
+    # Same logic as download_results, but for the history page.
 
     searchhistory_qs = SearchHistory.objects.all()
-    df = read_frame(searchhistory_qs, fieldnames=['search_term', 'total_records', 'searched_at'])
+    df = read_frame(
+        searchhistory_qs,
+        fieldnames=['search_term', 'total_records', 'searched_at']
+    )
     df = pl.from_pandas(df)
     df = df.with_columns(pl.col('searched_at').dt.strftime('%Y-%m-%d %H:%M:%S'))
-    df = df.rename({'search_term': 'Search_Term',
-                        'total_records': 'Records_Found',
-                        'searched_at': 'Timestamp'})
+    df = df.rename(
+        {
+            'search_term': 'Search_Term',
+            'total_records': 'Records_Found',
+            'searched_at': 'Timestamp'
+        }
+    )
     response = HttpResponse(df.write_csv(), content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_history.csv"'
+    response['Content-Disposition'] = (
+        'attachment; filename="plastid_ir_search_history.csv"'
+    )
     return response
 
-def download_accessions(request):
 
-    #Same logic as download_results, but for the accession records.
+def download_accessions(request):
+    # Same logic as download_results, but for the accession records.
 
     search_id = request.GET.get('id')
     searchhistory_qs = SearchHistory.objects.all()
-    history_accession_df = read_frame( searchhistory_qs ,fieldnames=['id','search_accessions'])
+    history_accession_df = read_frame(
+        searchhistory_qs,
+        fieldnames=['id', 'search_accessions']
+    )
     history_accession_df = pl.from_pandas(history_accession_df)
-    history_accession_df = history_accession_df.with_columns(pl.col('search_accessions')
-                                      .str.split(',')).explode('search_accessions')
+    history_accession_df = (
+        history_accession_df
+        .with_columns(
+            pl.col('search_accessions').str.split(',')
+        )
+        .explode('search_accessions')
+    )
     history_accession_df = history_accession_df.rename({'search_accessions': 'accession'})
 
     ir_info_qs = IR_Identification.objects.all()
@@ -219,9 +283,13 @@ def download_accessions(request):
         .filter(pl.col('id') == int(search_id))
         .join(ir_info_df, on='accession', how='inner')
     )
-    final_df = final_df.rename({'accession': 'Accession_ID',
-                        'ir_reported': 'IR_Reported'})
+    final_df = final_df.rename({
+        'accession': 'Accession_ID',
+        'ir_reported': 'IR_Reported'
+    })
     final_df = final_df.drop('id')
     response = HttpResponse(final_df.write_csv(), content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="plastid_ir_history_accessions.csv"'
+    response['Content-Disposition'] = (
+        'attachment; filename="plastid_ir_history_accessions.csv"'
+    )
     return response

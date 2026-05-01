@@ -36,11 +36,8 @@ def initiate_search(search_term):
 
     id_list = record["IdList"]
 
-
-    '''
-    These lines get records in batches of 500 and have a delay to keep the API from
-    closing its connection; which has already happened to me a few times.
-    '''
+    # These lines get records in batches of 500 and have a delay to keep the API from
+    # closing its connection; which has already happened to me a few times.
 
     records = []
     batch_size = 500
@@ -64,8 +61,7 @@ def initiate_search(search_term):
 
     df = pl.DataFrame(records)
 
-    #Cache records if already searched.
-
+    # Cache records if already searched.
     cache.set(search_term, (df, total_records))
 
     return df, total_records

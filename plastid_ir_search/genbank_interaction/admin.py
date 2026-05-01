@@ -4,6 +4,7 @@ from .models import IR_Identification
 from django.forms import DateInput
 from django import forms
 
+
 class IRIdentificationForm(forms.ModelForm):
     class Meta:
         model = IR_Identification
@@ -20,7 +21,7 @@ class IRCalculationAdmin(ModelAdmin):
     list_display = ["accession", "title", "updated_date", "ir_reported"]
     list_filter = ["updated", "ir_reported"]
     list_editable = ["ir_reported"]
-    exclude = ["ira_reported" ,"irb_reported"]
+    exclude = ["ira_reported", "irb_reported"]
 
     conditional_fields = {
         "ira_reported": "ir_reported == 'yes' || ir_reported == 'exception'",
@@ -33,10 +34,7 @@ class IRCalculationAdmin(ModelAdmin):
     }
     search_fields = ["accession", "title"]
 
-    #Make date ONLY appear.
-
+    # Make date ONLY appear.
     def updated_date(self, obj):
         return obj.updated.strftime('%B %d, %Y') if obj.updated else None
     updated_date.short_description = "Last Updated"
-
-    pass

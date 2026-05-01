@@ -7,7 +7,14 @@ class SearchResult(models.Model):
     bp_length = models.IntegerField()
     updated = models.DateTimeField(null=True, blank=True)
     created = models.DateTimeField(null=True, blank=True)
-    ir_info = models.ForeignKey('genbank_interaction.IR_Identification', to_field='accession', on_delete=models.SET_NULL, null=True, blank=True, related_name='search_results')
+    ir_info = models.ForeignKey(
+        'genbank_interaction.IR_Identification',
+        to_field='accession',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='search_results'
+    )
 
     def __str__(self):
         return f"{self.accession}"
@@ -15,7 +22,7 @@ class SearchResult(models.Model):
 
 class SearchHistory(models.Model):
     class Meta:
-        #Correcting spelling on admin page.
+        # Correcting spelling on admin page.
         verbose_name = "Search History"
         verbose_name_plural = "Search History"
 
