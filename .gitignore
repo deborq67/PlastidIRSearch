@@ -208,3 +208,5 @@ __marimo__/
 
 /plastid_ir_search/genbank_files
 
+plastid_ir_search/genbank_interaction/migrations/0001_initial.py
+plastid_ir_search/search_function/migrations/0001_initial.py
