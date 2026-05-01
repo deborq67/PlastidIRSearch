@@ -2,16 +2,44 @@ from django.shortcuts import render, redirect
 from .plastid_search_function import initiate_search
 from .models import SearchResult, SearchHistory
 from genbank_interaction.models import IR_Identification
-from datetime import datetime
+from datetime import datetime, date
 import polars as pl
 import pandas as pd
 from django.http import HttpResponse
+import plotly.express as px
 from django_pandas.io import read_frame
 from django.core.paginator import (Paginator, EmptyPage, PageNotAnInteger)
 
 
 def index(request):
-    return render(request, 'index.html')
+
+    #This whole part is to render a html graph.
+
+    histogram_qs = IR_Identification.objects.all()
+    histogram_df = read_frame(histogram_qs, fieldnames=['updated', 'accession', 'ir_reported'])
+
+    histogram_df = pl.from_pandas(histogram_df)
+
+    histogram_df = histogram_df.filter(pl.col('updated').is_not_null())
+    histogram_df = histogram_df.filter(pl.col('ir_reported') == 'Yes')
+    histogram_df = histogram_df.drop('ir_reported')
+
+    histogram_df = histogram_df.with_columns(pl.col('updated').cast(pl.Date))
+    histogram_df = histogram_df.rename({'accession': 'Accession IDs', 'updated': 'Last Update'})
+
+    plastid_histogram = px.histogram(histogram_df, x='Last Update',
+                        title='Total Annotated Plastid Records Uploaded to GenBank Over Time', template='none')
+
+    plastid_histogram.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(range=['2015-01-01', date.today().isoformat()]),
+        yaxis=dict(rangemode='nonnegative', title="Records"),
+    )
+
+    plastid_histogram = plastid_histogram.to_html(full_html=False, include_plotlyjs=False, config={'responsive': True})
+
+    return render(request, 'index.html', {'plastid_histogram': plastid_histogram})
 
 def about(request):
     return render(request, 'about.html')
@@ -110,7 +138,7 @@ def history(request):
     except EmptyPage:
         results_page = paginator.page(paginator.num_pages)
 
-    return render(request, 'search_function/history.html', {"history_records": results_page})
+    return render(request, 'search_function/history.html', {'history_records': results_page})
 
 
 #This extracts a list of Accession numbers for a separate page.
@@ -122,8 +150,8 @@ def accession_list(request):
     ).search_accessions.split(',')
     history_accessions.sort()
     return render(request, 'search_function/accessions.html',
-                  {"history_accessions": history_accessions,
-                          "search_id": search_id})
+                  {'history_accessions': history_accessions,
+                          'search_id': search_id})
 
 
 def download_results(request):
@@ -137,12 +165,12 @@ def download_results(request):
     df = pl.from_pandas(df)
     df = df.with_columns(pl.col('updated').dt.strftime('%Y-%m-%d'))
     df = df.with_columns(pl.col('created').dt.strftime('%Y-%m-%d'))
-    df = df.rename({"accession": "Accession",
-                        "title": "Title",
-                        "bp_length": "Base_Pair_Length",
-                        "updated": "Updated",
-                        "created": "Created",
-                        "ir_info__ir_reported": "IRs_Reported"})
+    df = df.rename({'accession': 'Accession',
+                        'title': 'Title',
+                        'bp_length': 'Base_Pair_Length',
+                        'updated': 'Updated',
+                        'created': 'Created',
+                        'ir_info__ir_reported': 'IRs_Reported'})
     response = HttpResponse(df.write_csv(), content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_results.csv"'
     return response
@@ -155,9 +183,9 @@ def download_history(request):
     df = read_frame(searchhistory_qs, fieldnames=['search_term', 'total_records', 'searched_at'])
     df = pl.from_pandas(df)
     df = df.with_columns(pl.col('searched_at').dt.strftime('%Y-%m-%d %H:%M:%S'))
-    df = df.rename({"search_term": "Search_Term",
-                        "total_records": "Records_Found",
-                        "searched_at": "Timestamp"})
+    df = df.rename({'search_term': 'Search_Term',
+                        'total_records': 'Records_Found',
+                        'searched_at': 'Timestamp'})
     response = HttpResponse(df.write_csv(), content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_history.csv"'
     return response
@@ -170,20 +198,20 @@ def download_accessions(request):
     searchhistory_qs = SearchHistory.objects.all()
     history_accession_df = read_frame( searchhistory_qs ,fieldnames=['id','search_accessions'])
     history_accession_df = pl.from_pandas(history_accession_df)
-    history_accession_df = history_accession_df.with_columns(pl.col("search_accessions")
-                                      .str.split(",")).explode("search_accessions")
-    history_accession_df = history_accession_df.rename({"search_accessions": "accession"})
+    history_accession_df = history_accession_df.with_columns(pl.col('search_accessions')
+                                      .str.split(',')).explode('search_accessions')
+    history_accession_df = history_accession_df.rename({'search_accessions': 'accession'})
 
     ir_info_qs = IR_Identification.objects.all()
     ir_info_df = read_frame(ir_info_qs, fieldnames=['accession', 'ir_reported'])
     ir_info_df = pl.from_pandas(ir_info_df)
     final_df = (
         history_accession_df
-        .filter(pl.col("id") == int(search_id))
-        .join(ir_info_df, on="accession", how="inner")
+        .filter(pl.col('id') == int(search_id))
+        .join(ir_info_df, on='accession', how='inner')
     )
-    final_df = final_df.rename({"accession": "Accession_ID",
-                        "ir_reported": "IR_Reported"})
+    final_df = final_df.rename({'accession': 'Accession_ID',
+                        'ir_reported': 'IR_Reported'})
     final_df = final_df.drop('id')
     response = HttpResponse(final_df.write_csv(), content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="plastid_ir_search_history.csv"'
