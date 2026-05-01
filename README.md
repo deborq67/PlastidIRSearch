@@ -32,13 +32,14 @@ records and if they're present, it gives the exact locations according to the no
 ## How to Use
 
 Just like any search engine, make your search by typing whatever plant or alga you want into the
-search engine, no registration needed!
+search engine, no registration needed! You can even see a graph of how many *annotated* records were added
+throughout time.
 
 ![PlastidIRHome.png](https://i.ibb.co/2LFCvbj/Plastid-IRHome.png) <br>
 
 ### About
 
-On the button at the hand-hand corner. This button mainly tells you basic information and *some* FAQS
+On the button at the left-hand corner. This button mainly tells you basic information and *some* FAQS
 about the project so you don't have to look at the Github page every time you want to do find something
 out. Mainly, it has a legend for the symbols in inverted repeats in case you want to know what each one does.
 <br>
@@ -51,13 +52,22 @@ Be warned though that due to rate-limiting, the results will be slower the more 
 
 If you get no results, don't worry: just search again. <br>
 
-![OrganelleResults.png](https://i.ibb.co/4nGDNNWv/Organelle-Results.png) <br>
+![PlastidIRResults.png](https://i.ibb.co/jZxbpgQL/Plastid-IRResults.png) <br>
 
+Like my previous projects, this program gives you the Accession IDs of each genetic record, title, description, dates of last update and creation along with the base pair length of the DNA sequence in each record.  There is a new column this time: `IR Reported in Record File?` 
+
+<br>
 Unlike my previous projects, the purpose of Plastid IR Search is to tell you information on whether inverted repeats were *annotated* in the actual
-genetic records of these plants and algae which is achieved via the analysis of more than 40000 genetic records. The check mark means both inverted
-repeats were annotated, the X means none were annotated, and the grey dash means the file was not found. YOu may have noticed that the `Accession` column is hyperlinked. That's because when you click on it, a different output appears depending on what `IR Reported in Record File?` says. If you click on it when there is an X, the program will simply tell you there was nothing found. If you click on a row with a dash however:
+genetic records of these plants and algae which is achieved via the analysis of more than 40000 genetic records. From the internal About page, here is the basic legend: <br>
 
-#########################################
+![PlastidIRLegend](https://i.ibb.co/r2dy01vw/Plastid-IRLegend.png) <br>
+
+You may have noticed that the `Accession` column is hyperlinked. That's because when you click on it, a different output appears depending on what `IR Reported in Record File?` says. If you click on it when there is an X, the program will simply tell you there was nothing found. If you click on a row with a dash however: <br>
+
+![PlastidIRHyperlink](https://i.ibb.co/yBF5Rr59/Plastid-IRHyperlink.png) <br>
+
+You can click on the hyperlink and be redirected to the NCBI page and download the .gb (Genbank) file from there. Afterwards, just place it in your `genbank_files` directory and run `python manage.py ir_setup` which is explained more in the installation instructions. If you click on a hyperlink with a check mark, you'll instead get the results of whether an IR was actually annotated or not. <br>
+
 
 
 
@@ -82,10 +92,7 @@ of records found and the search term itself if you so choose.
 
 ### Accession Finds
 
-On the button at the hand-hand corner. This button mainly tells you basic information and *some* FAQS
-about the project so you don't have to look at the Github page every time you want to do find something
-out. Mainly, it has a legend for the symbols in inverted repeats in case you want to know what each one does.
-<br>
+To the right of the History page, you'll find a button for Accessions. This button shows a list of all Accession buttons
 
 
 ### Admin Page
@@ -166,7 +173,7 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 Visit the address and the page should look like the first screenshot. You have
-successfully deployed Organelle Search on your own device!
+successfully deployed Plastid IR Search on your own device!
 
 ## Help
 
