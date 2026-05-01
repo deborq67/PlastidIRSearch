@@ -162,6 +162,7 @@ or depending on what type of Python you have:
 python3 -m venv .venv
 source .venv/bin/activate
 ```
+Alternatively, you could try taking out the version number and stick with the latest package in your Python repository. I imagine this would most likely work.
 
 ## Authors
  
