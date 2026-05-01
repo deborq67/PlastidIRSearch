@@ -1,6 +1,6 @@
 import os
 import polars as pl
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from multiprocessing import Pool
 from django.conf import settings
 
@@ -34,17 +34,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        if not os.path.exists(os.path.join(settings.BASE_DIR, "genbank_files")):
+            raise CommandError('The "genbank_files" directory can not be found. Make sure it is on the same level as manage.py.')
+
         from genbank_interaction.models import IR_Identification
         file_list = [
             file.path
             for file in os.scandir(os.path.join(settings.BASE_DIR, "genbank_files"))
             if file.name.endswith(".gb")
         ]
-
-        if not file_list:
-            self.stdout.write(
-                'The "genbank_files" directory can not be found. Make sure it is on the same level as manage.py.')
-            return
 
         #Ignore duplicates by default.
 
@@ -55,9 +53,8 @@ class Command(BaseCommand):
                 if os.path.splitext(os.path.basename(f))[0] not in current_records
             ]
             if not file_list:
-                self.stdout.write('No new files to process.')
-                return
-
+                 raise CommandError('No .gb files found in the "genbank_files" directory.')
+            
         self.stdout.write(f'{len(file_list)} new files to process.')
 
         self.stdout.write(f"Processing...")
@@ -68,8 +65,7 @@ class Command(BaseCommand):
         processed_results = [file_result for file_result in results if file_result is not None]
 
         if not processed_results:
-            self.stdout.write('No new files to process.')
-            return
+            raise CommandError('No files could be processed. Check your .gb files for errors.')
 
         df = pl.concat(processed_results)
 
