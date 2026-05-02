@@ -1,5 +1,5 @@
 # PlastidSearch
-An NCBI-based search engine that detects inverted repeats within plant plastids.
+An NCBI-based search engine that compares searches from the NCBI Entrez API with annotated inverted repeats in plant plastid records.
 
 ## Description
 
