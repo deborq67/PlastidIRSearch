@@ -135,7 +135,7 @@ To make things much easier for users, `Yes`,`No`, and making an exception are th
 at minimum, an Accession number, an inverted repeat option, and some date for reference. There are additional fields to put in addition information if you select `Yes` but the default is `No` for cleaner fields.
 <br>
 <br>
-![PlastidIRAdminAddRecord.png](https://i.ibb.co/DfZYmcBJ/Plastid-IRadmin-Add-Record.png)
+![PlastidIRAdminAddRecord.png](https://i.ibb.co/DPv02dsX/Plastid-IRadmin-Add-Record.png)
 
 
 ## Getting Started
