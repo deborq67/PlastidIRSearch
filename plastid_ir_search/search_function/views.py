@@ -245,7 +245,7 @@ def download_history(request):
         fieldnames=['search_term', 'total_records', 'searched_at']
     )
     df = pl.from_pandas(df)
-    df = df.with_columns(pl.col('searched_at').dt.strftime('%Y-%m-%d %H:%M:%S'))
+    df = df.with_columns(pl.col('searched_at').cast(pl.Datetime).dt.strftime('%Y-%m-%d %H:%M:%S'))
     df = df.rename(
         {
             'search_term': 'Search_Term',
