@@ -66,13 +66,13 @@ genetic records of these plants and algae which is achieved via the analysis of 
 ![PlastidIRLegend.png](https://i.ibb.co/r2dy01vw/Plastid-IRLegend.png) 
 <br>
 <br>
-You may have noticed that the `Accession` column is hyperlinked. That's because when you click on it, a different output appears depending on what `IR Reported in Record File?` says. If you click on it when there is an X, the program will simply tell you there was nothing found. If you click on a row with a dash however: 
+You may have noticed that in the screenshot before the legend, the `Accession` column is hyperlinked. That's because when you click on it, a different output appears depending on what `IR Reported in Record File?` says. If you click on it when there is an X, the program will simply tell you there was nothing found. If you click on a row with a dash however: 
 <br>
 <br>
 ![PlastidIRHyperlink.png](https://i.ibb.co/yBF5Rr59/Plastid-IRHyperlink.png) 
 <br>
 <br>
-You can click on the hyperlink and be redirected to the NCBI page and download the .gb (Genbank) file from there. Afterwards, just place it in your `genbank_files` directory and run `python manage.py ir_setup` which is explained more in the installation instructions. If you click on a hyperlink with a check mark, you'll instead get the results of whether an IR was actually annotated or not.
+You can click on the hyperlink and be redirected to the NCBI page and download the .gb (Genbank) file from there. Afterwards, just place it in your `genbank_files` directory and run `python manage.py ir_setup` which is explained more in the installation instructions. If you click on a hyperlink with a check mark, you'll instead get the results of the IR annotations.
 <br>
 <br>
 ![PlastidIRFound.png](https://i.ibb.co/TxcQCNvn/Plastid-IRFound.png)
@@ -114,7 +114,6 @@ the same hyperlink for the accessions that will show you if any annotations were
 
 ### Downloads
 You can download your history, your search results, AND your accessions found in a search in CSV formats. Every time you try to download, you will always get a confirmation dialogue prompting you to confirm your choice. After confirming, the download will start and you can click out of the box to escape (or hit cancel).
-
 
 ### Admin Page
 
