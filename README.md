@@ -159,6 +159,10 @@ The next section will tell you how to install it.
  
 Given the complexity of this program, you will have several steps before you can use it.
 
+#### Download the ZIP under "Releases" and extract the folder.
+
+That folder will represent the root.
+
 #### Step 1: Get your dependencies installed.
 
 * From the directory, get all your dependencies by executing this line on Python:
@@ -168,7 +172,7 @@ pip install -r requirements.txt
 
 #### Step 2: Download the Genbank folder and put it in the plastid_ir_search folder.
 
-NOT in the `PlastidIRSearch` folder (your root.) Put the folder on the same level as manage.py, you'll see
+NOT in the `PlastidIRSearch` folder (your root). Put the folder on the same level as manage.py, you'll see
 why later. As you do so, be sure to also  run `cd ./plastid_ir_search` on your terminal (both Windows and Linux).
 
 [Download the needed folder here.](https://drive.google.com/file/d/1D-JlTBUCT_bMl8UBFwnFtCS_qHYZx6ur/view?usp=drive_link)
@@ -267,7 +271,7 @@ Alternatively, you could try taking out the version number and stick with the la
  
 ## Version History
 
-* Released as plastidirsearch.zip.
+* Released as PlastidIRSearch.zip.
  
 ## License
  
