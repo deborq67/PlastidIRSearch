@@ -163,6 +163,8 @@ def search(request):
 
 # This loads the history into a table.
 def history(request):
+    if not request.session.session_key:
+        request.session.create()
     history_records = SearchHistory.objects.filter(
         session_key=request.session.session_key
     ).values('id', 'search_term', 'total_records', 'searched_at').order_by('-searched_at')
@@ -235,7 +237,9 @@ def download_results(request):
 def download_history(request):
     # Same logic as download_results, but for the history page.
 
-    searchhistory_qs = SearchHistory.objects.all()
+    searchhistory_qs = SearchHistory.objects.filter(
+        session_key=request.session.session_key
+    )
     df = read_frame(
         searchhistory_qs,
         fieldnames=['search_term', 'total_records', 'searched_at']
