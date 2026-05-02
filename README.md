@@ -286,7 +286,6 @@ So many I could name but here the most important pages that have helped me for t
 * [Magda Ehlers for the background image.](https://www.pexels.com/photo/lush-green-leafy-background-texture-29295558/)
 * [Bootstrap Template for Search Bar](https://bootstrapexamples.com/@anonymous/search-bar-with-search-icon-in-bootstrap-5-2)
 * [Bootstrap Template for Error Page](https://bootstrapexamples.com/@valeria/404-page-template-2)
-* [This Ernst Haeckel drawing for the logo: it's public domain.](https://pdimagearchive.org/images/b46b8d91-a0b4-4134-8268-1660285ab735/)
+* [This public domain flower for the logo.](https://pdimagearchive.org/images/f2b4aa77-8385-4fa2-9a32-b673e48f8047/)
 * [Modified Heroic Template used for base.html](https://github.com/startbootstrap/startbootstrap-heroic-features)
-* [Register and Login System](https://learndjango.com/tutorials/django-login-and-logout-tutorial)
 * [Bootstrap Navbar Documentation](https://getbootstrap.com/docs/4.0/components/navbar/#text)
