@@ -168,6 +168,7 @@ def history(request):
     history_records = SearchHistory.objects.filter(
         session_key=request.session.session_key
     ).values('id', 'search_term', 'total_records', 'searched_at').order_by('-searched_at')
+    #Once again using a paginator.
     default_page = 1
     page = request.GET.get('page', default_page)
     paginator = Paginator(history_records, 20)
@@ -272,6 +273,7 @@ def download_accessions(request):
     history_accession_df = pl.from_pandas(history_accession_df)
     history_accession_df = (
         history_accession_df
+        # Splits the comma-separated accessions into a list and then explodes for one accession per row.
         .with_columns(
             pl.col('search_accessions').str.split(',')
         )
@@ -292,6 +294,8 @@ def download_accessions(request):
         'ir_reported': 'IR_Reported'
     })
     final_df = final_df.drop('id')
+    if final_df.is_empty():
+        final_df = pl.DataFrame({'Accession_ID': [], 'IR_Reported': []})
     response = HttpResponse(final_df.write_csv(), content_type='text/csv')
     response['Content-Disposition'] = (
         'attachment; filename="plastid_ir_history_accessions.csv"'
