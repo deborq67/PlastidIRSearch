@@ -184,10 +184,12 @@ def history(request):
 
 # This extracts a list of Accession numbers for a separate page.
 def accession_list(request):
+    #Linked to search ID.
     search_id = request.GET.get('id')
     history_accessions = SearchHistory.objects.get(
         id=search_id, session_key=request.session.session_key
     ).search_accessions.split(',')
+    #Prevents crash if there are no accessionsn. Also sorts the accessions alphabetically.
     history_accessions = [accession for accession in history_accessions if accession]
     history_accessions.sort()
     return render(
@@ -216,6 +218,7 @@ def download_results(request):
             'ir_info__ir_reported'
         ]
     )
+    #Main thing here is formatting the time.
     df = pl.from_pandas(df)
     df = df.with_columns(pl.col('updated').dt.strftime('%Y-%m-%d'))
     df = df.with_columns(pl.col('created').dt.strftime('%Y-%m-%d'))
