@@ -53,7 +53,7 @@ Be warned though that due to rate-limiting, the results will be slower the more 
 If you get no results, don't worry: just search again.
 <br>
 <br>
-![PlastidIRResults.png](https://i.ibb.co/jZxbpgQL/Plastid-IRResults.png) 
+![PlastidIRResults.png](https://i.ibb.co/rGqjTsM2/Plastid-IRSearch2.png) 
 <br>
 <br>
 Like my previous projects, this program gives you the Accession IDs of each genetic record, title, description, dates of last update and creation along with the base pair length of the DNA sequence in each record.  There is a new column this time: `IR Reported in Record File?` 
