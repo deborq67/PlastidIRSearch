@@ -211,7 +211,6 @@ successfully deployed Plastid IR Search on your own device!
 
 #### OPTIONAL Step 6: Create an admin account.
 Just do:
-Just do:
 ```
 python manage.py createsuperuser
 ```
@@ -222,10 +221,22 @@ view history and edit exceptions if you so wish.
 
 * **Why is the program so slow?**
 
-Once again, it's because of API limits. Without an API key, the maximum amount of requests you
+It's because of API limits. Without an API key, the maximum amount of requests you
 can make is 3 per second. Same reason the maximum amount of results shown is 500.
 This has already been accounted for in the script and a limit was placed so even if
 you misspell your email, you shouldn't be blocked. However, please try to put a valid email.
+
+* **This file does have proper inverted repeats so why is it saying there are none found?**
+
+That's the limit of this program: it only checks if the IRs were manually annotated in the Genbank record, not if the DNA
+sequence truly has any inverted repeats or not. It is currently not capable of scanning the entire DNA sequence and finding
+out what IRs are present, it just looks at the notes. A good analogy for this is it checks if you put your
+name on the assignment, but not if you actually did the assignment itself.
+
+
+* **Why did these files have to be downloaded and not instead done via the API?**
+
+Once again, API limits. If you go any faster than that 3 request per second threshold, your connection could be arbitrarily closed which has already happened to me a couple of times. The rate limiting already limits searches to take around 10 seconds for 1000 results. If I were to fetch a new file from the API every time a search was executed, that would turn into 10 or more minutes.
 
 * **ERROR: Could not find a version that satisfies the requirement package==version_number**
 
