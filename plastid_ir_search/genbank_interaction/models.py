@@ -12,7 +12,7 @@ class IR_Identification(models.Model):
     IR_CHOICES = [
         ("yes", "Yes"),
         ("no", "No"),
-        ("exception", "No, or only 1 IR occur naturally in this species."),
+        ("exception", "No, or only 1 IR occurs naturally in this species."),
     ]
 
     IRB_CHOICES = [
