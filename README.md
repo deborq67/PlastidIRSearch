@@ -101,13 +101,16 @@ of when said search was executed.
 <br>
 <br>
 If you have a Django admin account, you can also visit the Django admin page to view, delete,
-and edit the search histories of users, and view what session key was used.
+and edit the search histories of users, and view what session key was used. There is a `View Accessions`
+button to the right which is explained in the next session.
 
-### Accession Finds
+### View Accessions
 
-To the right of the History page, you'll find a button for Accessions. This button shows a list of all 
-Accessions associated with that search. Remember how the accessions were hyperlinked? Well here you can find
-the same hyperlink f
+This button shows a list of all Accessions associated with that search. Remember how the accessions were hyperlinked? Well here you can find
+the same hyperlink for the accessions that will show you if any annotations were found for said accession. The `Download Accessions` button will print out a table that lists whether each Accession had IRs reported in it or not.
+<br>
+<br>
+![PlastidIRHAccessions.png](https://i.ibb.co/spNmZHs6/Plastid-IRAccessions.png)
 
 ### Downloads
 You can download your history, your search results, AND your accessions found in a search in CSV formats. Every time you try to download, you will always get a confirmation dialogue prompting you to confirm your choice. After confirming, the download will start and you can click out of the box to escape (or hit cancel).
@@ -228,8 +231,8 @@ view history and edit exceptions if you so wish.
 * **Why is the program so slow?**
 
 It's because of API limits. Without an API key, the maximum amount of requests you
-can make is 3 per second. This has already been accounted for in the script and a limit was placed so
-even with the dummy email in place, your connection should be fine.
+can make is 3 per second. This has already been accounted for in the script and a limit was placed so 
+your connection should be fine.
 
 * **This file does have proper inverted repeats so why is it saying there are none found?**
 
@@ -264,13 +267,15 @@ Alternatively, you could try taking out the version number and stick with the la
  
 ## Version History
 
-* Released as organellebaseflask.zip.
+* Released as plastidirsearch.zip.
  
 ## License
  
 This project is licensed under the GNU General Public License - see the LICENSE.md file for details
  
 ## Acknowledgments
+
+So many I could name but here are all the pages that have helped me for this project.
  
 * [Fayette Reynolds for the background image.](https://www.pexels.com/photo/cell-seen-under-microscope-11198505/)
 * [Bootstrap Template for Search Bar](https://bootstrapexamples.com/@anonymous/search-bar-with-search-icon-in-bootstrap-5-2)
