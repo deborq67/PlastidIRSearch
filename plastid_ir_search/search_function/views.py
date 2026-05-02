@@ -222,6 +222,7 @@ def download_results(request):
     df = pl.from_pandas(df)
     df = df.with_columns(pl.col('updated').dt.strftime('%Y-%m-%d'))
     df = df.with_columns(pl.col('created').dt.strftime('%Y-%m-%d'))
+    #Make rows human-readable.
     df = df.rename(
         {
             'accession': 'Accession',
