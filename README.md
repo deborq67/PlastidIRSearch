@@ -51,9 +51,9 @@ of seaweed, or even a potato. For maximum results, I highly suggest you use the 
 Be warned though that due to rate-limiting, the results will be slower the more results generated.
 <br>
 
-If you get no results, don't worry: just search again. 
-<br>
+If you get no results, don't worry: just search again.
 
+<br>
 ![PlastidIRResults.png](https://i.ibb.co/jZxbpgQL/Plastid-IRResults.png) 
 <br>
 
@@ -62,8 +62,8 @@ Like my previous projects, this program gives you the Accession IDs of each gene
 <br>
 Unlike my previous projects, the purpose of Plastid IR Search is to tell you information on whether inverted repeats were *annotated* in the actual
 genetic records of these plants and algae which is achieved via the analysis of more than 40000 genetic records. From the internal About page, here is the basic legend: 
-<br>
 
+<br>
 ![PlastidIRLegend](https://i.ibb.co/r2dy01vw/Plastid-IRLegend.png) 
 <br>
 
@@ -77,7 +77,7 @@ You can click on the hyperlink and be redirected to the NCBI page and download t
 <br>
 
 ![PlastidIRFound](https://i.ibb.co/TxcQCNvn/Plastid-IRFound.png)
-
+<br>
 
 When you're done looking at the results, click the logo or
 make a new search using the Result search bar. 
@@ -91,9 +91,11 @@ Need some ideas of what to search for? Try these organisms:
 You may have noticed that at the end of the top black bar, there is an option that
 says `History`. As the name suggests, this button lets you view your entire
 search history including invalid results. It will also show the time stamp
-of when said search was executed. <br>
+of when said search was executed. 
+<br>
 
-![OrganelleHistory.png](https://i.ibb.co/TqH77P7T/Organelle-History.png) <br>
+![OrganelleHistory.png](https://i.ibb.co/TqH77P7T/Organelle-History.png) 
+<br>
 
 If you have a Django admin account, you can also visit the Django admin page to view, delete,
 and edit the search histories of users, including yours. Specifically, you can edit the amount
@@ -101,12 +103,21 @@ of records found and the search term itself if you so choose.
 
 ### Accession Finds
 
-To the right of the History page, you'll find a button for Accessions. This button shows a list of all Accession buttons
+To the right of the History page, you'll find a button for Accessions. This button shows a list of all 
+Accessions associated with that search. Remember how the accessions were hyperlinked? Well here you can find
+the same hyperlink f
 
 
 ### Admin Page
 
 Completely redone and makes adding Accession Records much easier.
+<br>
+![OrganelleHistory.png](https://i.ibb.co/q3T69W0W/Plastid-IRAdmin.png)
+<br>
+
+The admin page now allows you to view search history AND manually edit/add Accession records.
+
+
 
 
 
@@ -142,7 +153,7 @@ why later. As you do so, be sure to also  run `cd ./plastid_ir_search` on your t
 Fair warning: This folder is around 1.1 GB large and fully decompressed, you're looking at almost 14 GB. It contains over 40000
 publicly-available genetic records from [NCBI Genbank.](https://www.ncbi.nlm.nih.gov/genbank/) Don't change the name of the folder.
 
-#### Step 2: Get the models created.
+#### Step 3: Get the models created.
 
 Needed to store important information later on. Just do:
 
@@ -151,7 +162,7 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-#### Step 3: Execute ir_setup.
+#### Step 4: Execute ir_setup.
 
 This is a custom command that will generate IR values to be associated with each search. It detects that exact `genbank_files` folder on
 the manage.py level. This step will take a few minutes since it is computing more than 40000 files. Just do:
@@ -164,7 +175,7 @@ OPTIONAL: If you ever want to update your existing files already on tables for a
 ```
 python manage.py ir_setup -u
 ```
-#### Step 4: Run the server.
+#### Step 5: Run the server.
 Just do:
 ```
 python manage.py runserver
@@ -184,6 +195,14 @@ Quit the server with CONTROL-C.
 Visit the address and the page should look like the first screenshot. You have
 successfully deployed Plastid IR Search on your own device!
 
+#### OPTIONAL Step 6: Create an admin account.
+Just do:
+Just do:
+```
+python manage.py createsuperuser
+```
+Put in a username (you can skip the email part) and a password and then head over to http://127.0.0.1:8000/admin/ to
+view history and edit exceptions if you so wish.
 ## Help
 
 
