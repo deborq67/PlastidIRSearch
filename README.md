@@ -222,9 +222,8 @@ view history and edit exceptions if you so wish.
 * **Why is the program so slow?**
 
 It's because of API limits. Without an API key, the maximum amount of requests you
-can make is 3 per second. Same reason the maximum amount of results shown is 500.
-This has already been accounted for in the script and a limit was placed so even if
-you misspell your email, you shouldn't be blocked. However, please try to put a valid email.
+can make is 3 per second. This has already been accounted for in the script and a limit was placed so
+even with the dummy email in place, your connection should be fine.
 
 * **This file does have proper inverted repeats so why is it saying there are none found?**
 
