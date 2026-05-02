@@ -14,16 +14,13 @@ DNA sequences of organelles for different species in genetic databases.
 Plastid IR Search is a search engine for complete *plastid* genome records. Plastids are a type of organelle 
 only found in plants, algae, and a few other eukaryotes. Chloroplasts, the organelles responsible for photosynthesis in 
 plants, are actually a type of plastid. One of the more unique features of plastid genomes is that 
-they mostly consist of what are known as inverted repeats (IRs). Basically, these are two separate 
-sections of the genome that are opposites of each other and, when lined up, match. For example, 
-Ira (the first inverted repeat) could look like:
+they mostly consist of what are known as inverted repeats (IRs). Basically, these are two separate sections of the genome that are "opposites" (complements) of each other and, when lined up, match each other's opposing base. For example, IrA (the first inverted repeat) could look like:
 ```
 GCTTATTCTCTATGCGGGG
 ```
-and then Irb would be the same sequence backwards:
-
+and then IrB would be the same sequence backwards and have its A bases swapped with Ts and Cs swapped with Gs (and vice versa) and it will look like:
 ```
-GGGGCGTATCTCTTATTCG
+CCCCGCATAGAGAATAAGC
 ```
 In GenBank, some of these complete plastid genome records do not note, or annotate, whether there is
 an inverted repeat present or not. Plastid IR Search tries to locate the presence of these notes in the
