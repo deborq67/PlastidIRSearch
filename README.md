@@ -281,12 +281,21 @@ This project is licensed under the GNU General Public License - see the LICENSE.
 So many I could name but here the most important pages that have helped me for this project.
 
 
-* [airpg by Michael Gruenstaeudl. He gave me permission to use ir_operations.py in his script for this project.](https://github.com/michaelgruenstaeudl/airpg) 
+* [airpg by Michael Gruenstaeudl. He gave me permission to use ir_operations.py in his script for this project.](https://github.com/michaelgruenstaeudl/airpg)
+* [NCBI and its contributors for their records.](https://www.ncbi.nlm.nih.gov/genbank/)
+* [This public domain flower for the logo and favicon.](https://pdimagearchive.org/images/f2b4aa77-8385-4fa2-9a32-b673e48f8047/) 
 * [Magda Ehlers for the background image.](https://www.pexels.com/photo/lush-green-leafy-background-texture-29295558/)
 * [Bootstrap Template for Search Bar](https://bootstrapexamples.com/@anonymous/search-bar-with-search-icon-in-bootstrap-5-2)
 * [Bootstrap Template for Error Page](https://bootstrapexamples.com/@valeria/404-page-template-2)
 * [This favicon tutorial.](https://learndjango.com/tutorials/django-favicon-tutorial)
-* 
-* [This public domain flower for the logo.](https://pdimagearchive.org/images/f2b4aa77-8385-4fa2-9a32-b673e48f8047/)
+* [This article helped in creating the ir_setup command.](https://www.geeksforgeeks.org/python/custom-django-management-commands/)
+* [Making queries in Django.](https://docs.djangoproject.com/en/5.0/topics/db/queries/#lookups-that-span-relationships)
+* [Session usage eliminated the email requirement present in the previous projects.](https://docs.djangoproject.com/en/6.0/topics/http/sessions/)
+* [Bootstrap Icons for the symbols.](https://icons.getbootstrap.com/)
+* [Plotly documentation.](https://plotly.com/python/plotly-express/)
+* [Polars documentation, specifically for transformations.](https://docs.pola.rs/)
 * [Modified Heroic Template used for base.html](https://github.com/startbootstrap/startbootstrap-heroic-features)
 * [Bootstrap Navbar Documentation](https://getbootstrap.com/docs/4.0/components/navbar/#text)
+* [Django-pandas for making CSV exports much easier.](https://django-pandas.readthedocs.io/en/latest/)
+* [Django Unfold for making my admin look much nicer.](https://unfoldadmin.com/docs/installation/quickstart/)
+* [Biopython for supplying both the Entrez API for searches and SeqIO for the offline file parsing.](https://biopython.org/)
