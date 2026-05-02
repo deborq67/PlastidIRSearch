@@ -121,6 +121,7 @@ Completely redone and makes adding Accession Records much easier.
 The admin page now allows you to view search history AND manually edit/add Accession records. You can search records by Accession ID, title,
 and even time!
 <br>
+<br>
 **NOTE FOR TIME:** Due to the way it is stored in the model, time must be searched in a `dd mm yyyy` format to properly find anything. For example:
 ```
 04 2023
@@ -135,8 +136,7 @@ To make things much easier for users, `Yes`,`No`, and making an exception are th
 at minimum, an Accession number, an inverted repeat option, and some date for reference. There are additional fields to put in addition information if you select `Yes` but the default is `No` for cleaner fields.
 <br>
 <br>
-![PlastidIRAdminAddRecord.png](https://i.ibb.co/DPv02dsX/Plastid-IRadmin-Add-Record.png)
-
+![PlastidIRAdminAddRecord.png](https://i.ibb.co/HTtCjZc7/Plastid-IRAdd-Record.png)
 
 ## Getting Started
 
