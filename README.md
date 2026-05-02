@@ -112,11 +112,13 @@ the same hyperlink f
 
 Completely redone and makes adding Accession Records much easier.
 <br>
-![OrganelleHistory.png](https://i.ibb.co/q3T69W0W/Plastid-IRAdmin.png)
+![PlastidIRAdmin.png](https://i.ibb.co/q3T69W0W/Plastid-IRAdmin.png)
 <br>
-
+<br>
 The admin page now allows you to view search history AND manually edit/add Accession records.
-
+<br>
+<br>
+![PlastidIRAdminOptions.png](https://i.ibb.co/ns3tPF3n/Plastid-IRAdmin-Options.png)
 
 
 
