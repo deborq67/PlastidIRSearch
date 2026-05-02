@@ -34,9 +34,11 @@ records and if they're present, it gives the exact locations according to the no
 Just like any search engine, make your search by typing whatever plant or alga you want into the
 search engine, no registration needed! You can even see a graph of how many *annotated* records were added
 throughout time.
-
-![PlastidIRHome.png](https://i.ibb.co/2LFCvbj/Plastid-IRHome.png) <br>
-
+<br>
+<br>
+![PlastidIRHome.png](https://i.ibb.co/2LFCvbj/Plastid-IRHome.png)
+<br>
+<br>
 ### About
 
 On the button at the left-hand corner. This button mainly tells you basic information and *some* FAQS
@@ -50,39 +52,35 @@ You can search any eukaryotic organism you want on this search engine. Be it ric
 of seaweed, or even a potato. For maximum results, I highly suggest you use the scientific family or family of the organism you want to look up.
 Be warned though that due to rate-limiting, the results will be slower the more results generated.
 <br>
-
+<br>
 If you get no results, don't worry: just search again.
-
+<br>
 <br>
 ![PlastidIRResults.png](https://i.ibb.co/jZxbpgQL/Plastid-IRResults.png) 
 <br>
-
+<br>
 Like my previous projects, this program gives you the Accession IDs of each genetic record, title, description, dates of last update and creation along with the base pair length of the DNA sequence in each record.  There is a new column this time: `IR Reported in Record File?` 
-
+<br>
 <br>
 Unlike my previous projects, the purpose of Plastid IR Search is to tell you information on whether inverted repeats were *annotated* in the actual
 genetic records of these plants and algae which is achieved via the analysis of more than 40000 genetic records. From the internal About page, here is the basic legend: 
-
 <br>
-
+<br>
 ![PlastidIRLegend.png](https://i.ibb.co/r2dy01vw/Plastid-IRLegend.png) 
-
 <br>
-
+<br>
 You may have noticed that the `Accession` column is hyperlinked. That's because when you click on it, a different output appears depending on what `IR Reported in Record File?` says. If you click on it when there is an X, the program will simply tell you there was nothing found. If you click on a row with a dash however: 
 <br>
-
-![PlastidIRHyperlink.png](https://i.ibb.co/yBF5Rr59/Plastid-IRHyperlink.png) 
-
 <br>
-
+![PlastidIRHyperlink.png](https://i.ibb.co/yBF5Rr59/Plastid-IRHyperlink.png) 
+<br>
+<br>
 You can click on the hyperlink and be redirected to the NCBI page and download the .gb (Genbank) file from there. Afterwards, just place it in your `genbank_files` directory and run `python manage.py ir_setup` which is explained more in the installation instructions. If you click on a hyperlink with a check mark, you'll instead get the results of whether an IR was actually annotated or not.
 <br>
-
-![PlastidIRFound.png](https://i.ibb.co/TxcQCNvn/Plastid-IRFound.png)
-
 <br>
-
+![PlastidIRFound.png](https://i.ibb.co/TxcQCNvn/Plastid-IRFound.png)
+<br>
+<br>
 When you're done looking at the results, click the logo or
 make a new search using the Result search bar. 
 <br>
@@ -97,10 +95,10 @@ says `History`. As the name suggests, this button lets you view your entire
 search history including invalid results. It will also show the time stamp
 of when said search was executed. 
 <br>
-
+<br>
 ![OrganelleHistory.png](https://i.ibb.co/TqH77P7T/Organelle-History.png) 
 <br>
-
+<br>
 If you have a Django admin account, you can also visit the Django admin page to view, delete,
 and edit the search histories of users, including yours. Specifically, you can edit the amount
 of records found and the search term itself if you so choose.
@@ -116,15 +114,28 @@ the same hyperlink f
 
 Completely redone and makes adding Accession Records much easier.
 <br>
+<br>
 ![PlastidIRAdmin.png](https://i.ibb.co/q3T69W0W/Plastid-IRAdmin.png)
 <br>
 <br>
-The admin page now allows you to view search history AND manually edit/add Accession records.
+The admin page now allows you to view search history AND manually edit/add Accession records. You can search records by Accession ID, title,
+and even time!
+<br>
+**NOTE FOR TIME:** Due to the way it is stored in the model, time must be searched in a `dd mm yyyy` format to properly find anything. For example:
+```
+04 2023
+```
+This will list records in April of 2023. The spaces are important.
 <br>
 <br>
 ![PlastidIRAdminOptions.png](https://i.ibb.co/ns3tPF3n/Plastid-IRAdmin-Options.png)
-
-
+<br>
+<br>
+To make things much easier for users, `Yes`,`No`, and making an exception are the only options allowed for inverted repeats. All entries must include
+at minimum, an Accession number, an inverted repeat option, and some date for reference. There are additional fields to put in addition information if you select `Yes` but the default is `No` for cleaner fields.
+<br>
+<br>
+![PlastidIRAdminAddRecord.png](https://i.ibb.co/DfZYmcBJ/Plastid-IRadmin-Add-Record.png)
 
 
 ## Getting Started
