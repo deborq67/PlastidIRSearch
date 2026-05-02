@@ -84,6 +84,10 @@ make a new search using the Result search bar.
 
 Need some ideas of what to search for? Try these organisms:
  * *Solanum tuberosum* - Potato
+ * *Camellia sinensis* - Tea plant
+ * *Nicotiana tabacum* - Tobacco
+ * *Saccharina japonica* - Kombu seaweed
+ * *Taraxacum* - Genus of plants known as dandelions
 
 ### History
 
@@ -93,18 +97,20 @@ search history including invalid results. It will also show the time stamp
 of when said search was executed. 
 <br>
 <br>
-![OrganelleHistory.png](https://i.ibb.co/TqH77P7T/Organelle-History.png) 
+![PlastidIRHistory.png](https://i.ibb.co/pvJmqmD9/Plastid-IRHistory.png) 
 <br>
 <br>
 If you have a Django admin account, you can also visit the Django admin page to view, delete,
-and edit the search histories of users, including yours. Specifically, you can edit the amount
-of records found and the search term itself if you so choose.
+and edit the search histories of users, and view what session key was used.
 
 ### Accession Finds
 
 To the right of the History page, you'll find a button for Accessions. This button shows a list of all 
 Accessions associated with that search. Remember how the accessions were hyperlinked? Well here you can find
 the same hyperlink f
+
+### Downloads
+You can download your history, your search results, AND your accessions found in a search in CSV formats. Every time you try to download, you will always get a confirmation dialogue prompting you to confirm your choice. After confirming, the download will start and you can click out of the box to escape (or hit cancel).
 
 
 ### Admin Page
