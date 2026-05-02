@@ -32,7 +32,7 @@ class IRCalculationAdmin(ModelAdmin):
         "irb_reported_end": "ir_reported == 'yes'",
         "irb_reported_length": "ir_reported == 'yes'",
     }
-    search_fields = ["accession", "title"]
+    search_fields = ["accession", "title", "updated_date"]
 
     # Make date ONLY appear.
     def updated_date(self, obj):
