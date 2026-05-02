@@ -64,19 +64,23 @@ Unlike my previous projects, the purpose of Plastid IR Search is to tell you inf
 genetic records of these plants and algae which is achieved via the analysis of more than 40000 genetic records. From the internal About page, here is the basic legend: 
 
 <br>
-![PlastidIRLegend](https://i.ibb.co/r2dy01vw/Plastid-IRLegend.png) 
+
+![PlastidIRLegend.png](https://i.ibb.co/r2dy01vw/Plastid-IRLegend.png) 
+
 <br>
 
 You may have noticed that the `Accession` column is hyperlinked. That's because when you click on it, a different output appears depending on what `IR Reported in Record File?` says. If you click on it when there is an X, the program will simply tell you there was nothing found. If you click on a row with a dash however: 
 <br>
 
-![PlastidIRHyperlink](https://i.ibb.co/yBF5Rr59/Plastid-IRHyperlink.png) 
+![PlastidIRHyperlink.png](https://i.ibb.co/yBF5Rr59/Plastid-IRHyperlink.png) 
+
 <br>
 
 You can click on the hyperlink and be redirected to the NCBI page and download the .gb (Genbank) file from there. Afterwards, just place it in your `genbank_files` directory and run `python manage.py ir_setup` which is explained more in the installation instructions. If you click on a hyperlink with a check mark, you'll instead get the results of whether an IR was actually annotated or not.
 <br>
 
-![PlastidIRFound](https://i.ibb.co/TxcQCNvn/Plastid-IRFound.png)
+![PlastidIRFound.png](https://i.ibb.co/TxcQCNvn/Plastid-IRFound.png)
+
 <br>
 
 When you're done looking at the results, click the logo or
