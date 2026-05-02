@@ -188,6 +188,7 @@ def accession_list(request):
     history_accessions = SearchHistory.objects.get(
         id=search_id, session_key=request.session.session_key
     ).search_accessions.split(',')
+    history_accessions = [accession for accession in history_accessions if accession]
     history_accessions.sort()
     return render(
         request,
