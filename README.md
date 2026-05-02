@@ -282,8 +282,8 @@ This project is licensed under the GNU General Public License - see the LICENSE.
 So many I could name but here the most important pages that have helped me for this project.
 
 
-* [airpg by my PI Michael Gruenstaeudl. He gave me permission to use ir_operations.py in his script for this project.](https://github.com/michaelgruenstaeudl/airpg) 
-* [Fayette Reynolds for the background image.](https://www.pexels.com/photo/cell-seen-under-microscope-11198505/)
+* [airpg by Michael Gruenstaeudl. He gave me permission to use ir_operations.py in his script for this project.](https://github.com/michaelgruenstaeudl/airpg) 
+* [Magda Ehlers for the background image.](https://www.pexels.com/photo/lush-green-leafy-background-texture-29295558/)
 * [Bootstrap Template for Search Bar](https://bootstrapexamples.com/@anonymous/search-bar-with-search-icon-in-bootstrap-5-2)
 * [Bootstrap Template for Error Page](https://bootstrapexamples.com/@valeria/404-page-template-2)
 * [This Ernst Haeckel drawing for the logo: it's public domain.](https://pdimagearchive.org/images/b46b8d91-a0b4-4134-8268-1660285ab735/)
