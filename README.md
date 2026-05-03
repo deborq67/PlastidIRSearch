@@ -171,7 +171,7 @@ pip install -r requirements.txt
 
 #### Step 2: Download the Genbank records (in .7z format), and extract it to the plastid_ir_search folder.
 
-NOT in the `PlastidIRSearch` folder (your root). Put the folder on the same level as manage.py, you'll see
+NOT in the `PlastidIRSearch` folder (your root). Put the folder on the same level as `manage.py`, you'll see
 why later. As you do so, be sure to also run `cd ./plastid_ir_search` or `cd .\plastid_ir_search` on your terminal (both Windows and Linux).
 
 [Download the needed folder here.](https://drive.google.com/file/d/1D-JlTBUCT_bMl8UBFwnFtCS_qHYZx6ur/view?usp=drive_link)
